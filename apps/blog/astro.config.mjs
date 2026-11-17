@@ -16,6 +16,7 @@ import tailwindcss from "@tailwindcss/vite";
  */
 export default defineConfig({
   site: "https://inexconnect.com/blog",
+  base: "/blog",
   adapter: cloudflare(),
   integrations: [react(), mdx(), keystatic(), sitemap()],
   vite: {
