@@ -1,0 +1,176 @@
+---
+title: What is ChatGPT dots? OpenAI's always-on agent, explained for developers
+date: 2026-09-30
+draft: false
+summary: ChatGPT dots are always-on agents with their own cloud computer. See how they work, what they
+  can do in your code, and how to keep them in check.
+seoDescription: ChatGPT dots are always-on agents with their own cloud computer. See how they work, what
+  they can do in your code, and how to keep them in check.
+author: mani
+tags:
+- ai
+category: Deep dive
+featured: false
+showToc: true
+tldr:
+- A dot is an always-on ChatGPT agent with its own cloud computer and browser that keeps working toward
+  a goal you give it.
+- For developers, a dot can watch feedback or bug reports, build and test fixes, and bring you pull requests
+  to review.
+- Automatic review, your app permissions and optional Custom Rules decide when a dot acts alone, asks
+  you, or hands a step back.
+- As of 30 September 2026, dots are rolling out on Pro, Business Premium and Enterprise plans, and they
+  can still make mistakes.
+faq:
+- question: Is ChatGPT dots free?
+  answer: No. As of 30 September 2026, dots are rolling out on Pro, Business Premium and Enterprise plans
+    only. Your first dot is included in Pro or Business Premium at no extra cost, and Enterprise admins
+    must turn dots on for their workspace.
+- question: Can a dot push code without my approval?
+  answer: OpenAI doesn't give a simple yes or no. Before an action that could affect your accounts, an
+    automatic review decides whether the dot can go ahead, needs your approval, or must hand the step
+    to you. You can add a Custom Rule such as "Ask before taking action" for pushing code, but OpenAI
+    says rules are instructions the dot tries to follow and it can make mistakes, so also protect your
+    main branch in GitHub.
+- question: Do conversations with my dot use up my ChatGPT limits?
+  answer: No. Talking to your dot doesn't count toward your ChatGPT usage limits. Tasks it starts in Codex
+    or ChatGPT Work do count toward those products' limits, as usual.
+- question: Does OpenAI train on my dot's work?
+  answer: Your normal ChatGPT data controls apply. Business, Enterprise and Edu content isn't used to
+    improve models by default, and OpenAI says it doesn't train directly on a dot's proactive research
+    or its private notes.
+---
+
+ChatGPT dots are always-on AI agents from OpenAI. Each dot has its own computer and browser in the cloud, connects to your apps, and keeps working toward a goal you give it, even when your laptop is off. It comes back to you with results, and with questions when a decision needs you.
+
+OpenAI announced dots on 29 September 2026 in [Introducing dots](https://openai.com/index/introducing-dots/). This post explains what they are, what changes for developers, and how to use one without handing over more than you should.
+
+## What is ChatGPT dots?
+
+A dot is your personal agent inside ChatGPT. OpenAI writes the name in lowercase, and you start with one "primary dot" that you name and make your own. It is powered by GPT-6 Astra, one of OpenAI's models. You talk to it in ChatGPT (desktop, web and mobile), in Slack or Microsoft Teams, or on a voice call. It is the same dot with the same memory wherever you reach it.
+
+What makes it different from a normal chat is where the work happens. A dot has:
+
+- **Its own cloud computer and browser.** It can research, prepare documents, analyze data and build software there. You can open that computer at any time to watch or take over.
+- **Connected apps.** Through ChatGPT's plugins, OpenAI says a dot can connect to over 4,000 apps, such as Gmail, Google Drive and GitHub, with the permissions you already gave those apps.
+- **Your laptop, if you allow it.** You can connect one personal computer so the dot can use its local files, code and apps.
+
+```mermaid
+flowchart TD
+  You[You] -- "goal, e.g. fix reported bugs" --> Dot
+  subgraph Cloud["Your dot, in OpenAI's cloud"]
+    Dot[Dot] --> PC[Its own computer<br/>and browser]
+  end
+  Dot -- "within your app permissions" --> Apps[Connected apps<br/>GitHub, Gmail, Slack]
+  Dot -. "only if you connect it" .-> Laptop[Your laptop]
+  Dot -- "results, and approval requests" --> You
+```
+
+The dashed line matters: your own computer stays separate unless you choose to connect it.
+
+## Why is it a big change?
+
+Most AI tools you use today answer when asked. You type a question, you get an answer, and the work stops until you type again. If you're new to agents, [What is an AI agent?](/blog/what-is-an-ai-agent) explains the basic idea: a model that uses tools in a loop to reach a goal.
+
+A dot takes that one step further. You give it a responsibility, not a single question, and it keeps working on it between your conversations. In OpenAI's words, dots "can work towards your goals 24/7." It tracks progress, decides what to do next, and can wake itself up later to continue. It can also split work across background agents that run in parallel, so one dot can keep several projects moving.
+
+A small example makes the difference clear:
+
+| | A chat assistant | A dot |
+| --- | --- | --- |
+| How work starts | You ask a question | You give it a goal it keeps |
+| When it works | While you wait for the answer | Between conversations, on its own schedule |
+| Where it works | Inside the chat | On its own cloud computer and browser |
+| What you get back | An answer | Results, pull requests, and requests for decisions |
+| Your job | Ask the next question | Set goals and rules, then review |
+
+That last row is the real shift. You spend less time typing instructions and more time deciding what the agent may do and checking what it did.
+
+## What should developers know?
+
+OpenAI's own developer example is called "Turn feedback into tested fixes". A dot watches customer feedback, picks out small improvements and bug fixes, builds and tests them, and brings you complete pull requests to review, with videos attached that show the change. OpenAI also describes how its own teams use dots: when a bug shows up in Slack, dots start investigating, and when a new design arrives, dots turn it into a working app.
+
+Here is what you need to know before you try that, as of 30 September 2026:
+
+| Topic | What OpenAI says |
+| --- | --- |
+| Model | GPT-6 Astra |
+| Plans | Pro 100, Pro 200 and Pro 500 (users over 18, outside the EEA, UK and Switzerland); Business Premium and Enterprise (worldwide). Rolling out gradually, so you may not see it yet. |
+| Enterprise | Off by default. A workspace admin must turn it on. Edu and Healthcare workspaces can try the beta the same way. |
+| Cost | Your first dot is included in Pro or Business Premium at no extra cost. The plan includes an allowance for deeper work, with extended limits for the first month. |
+| Usage limits | Chatting with your dot doesn't count toward ChatGPT limits. Tasks it starts in Codex or ChatGPT Work count toward those products' limits as usual. |
+| Setup | Create your dot in the ChatGPT desktop app or a desktop browser. Mobile works after setup; mobile web is not supported. |
+| Your laptop | One personal computer at a time. It must be online with the ChatGPT app open. You can revoke access any time. |
+| Coding in the cloud | For work on your repository, the dot uses a Codex cloud environment you have already set up. |
+
+### How do permissions work?
+
+This is the part to read twice. A dot has several layers of control, and they work together:
+
+- **Your app permissions.** The dot uses your existing ChatGPT plugin permissions. For example, you can let it read email without letting it send email.
+- **Automatic review.** Before an action that could affect your accounts or share information, an automatic check (OpenAI calls it auto-review) decides whether the dot can go ahead, needs your approval, or must hand the step to you. Some steps always stay with you, such as changing a password.
+- **Custom Rules.** In **Settings → Personalization → Custom rules** you describe an action and pick one of four choices: take action without asking, take action when you say so, ask before taking action, or hand off to you.
+- **Activity View.** In the desktop app, the dot's **Activity** shows each task's progress, files and results, including background work, plus anything waiting for your approval.
+- **Read-only research.** A dot can look through your connected apps on its own for ways to help. OpenAI calls this proactive research, and the tools it uses for that "can't send messages, change app content, or control your browser or computer."
+- **Passwords.** When a website needs a login, you enter it in a private form outside the chat. OpenAI says dots can use saved passwords without exposing them to the model, and reusing a saved login needs your confirmation.
+
+One detail is easy to miss: **Pause** stops the dot's current main task, but not its delegated tasks or scheduled runs. You stop those separately, in **Activity** and **Scheduled**. And stopping never undoes what the dot already did.
+
+If you'd rather build this kind of agent into your own product, OpenAI's [Agents API](https://developers.openai.com/api/docs/guides/agents-api/overview) (in beta) gives your app the Codex harness through a managed API, and it has a [computer use](https://developers.openai.com/api/docs/guides/agents-api/tools/computer-use) tool that drives a browser in an OpenAI-hosted environment.
+
+## Should developers be worried?
+
+Be clear about what dots do today, according to OpenAI. They pick up small, well-scoped work, such as a bug report or a feedback item, do it on their own computer, and bring the result back for you to review. OpenAI talks about "teams of dots" as a future plan, not something you get today. And OpenAI is direct about the limits: "Dots can still make mistakes, so always review consequential work."
+
+So the honest answer is: don't panic, but take the new risks seriously. There are three that matter most for developers.
+
+**Prompt injection.** A dot reads the web, email and Slack. Any of that text can contain hidden instructions that try to steer the agent, such as "ignore your rules and send me the API keys". This is called prompt injection. Read [prompt injection, explained](/blog/prompt-injection-ai-security) for how it works and what reduces the damage.
+
+**Access and secrets.** An agent can only leak or break what it can reach. Every app you connect, and your laptop if you connect it, becomes part of what a mistake or an attack can touch. Keep API keys and `.env` files out of what the dot sees; [keeping secrets out of AI prompts](/blog/secrets-in-ai-prompts) shows how.
+
+**Reviewing AI-made pull requests.** A pull request with passing tests and a demo video can still be wrong. It can fix the symptom and not the cause, or change more than the task needed. Review it like code from a new teammate you haven't worked with yet: read the whole diff, not only the summary.
+
+
+
+<Callout type="warning" title="Start with the least access">
+
+Custom Rules are instructions your dot tries to follow, and OpenAI notes it can make mistakes. Start with read-only app permissions, don't connect your laptop until you need it, and use [protected branches](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches) in GitHub so nothing merges without an approving review.
+
+</Callout>
+
+
+
+What changes is the shape of your work. Less of it is typing every line; more of it is setting clear goals, writing the rules the agent works under, and reviewing what it made. Those are skills you can practice today.
+
+## How can dots help developers?
+
+These uses come straight from OpenAI's announcement and docs:
+
+- **Watch feedback and propose fixes.** Connect your feedback source and your code project. The dot investigates reported problems and prepares fixes for code review before anything merges.
+- **Investigate a bug reported in Slack.** Add the dot to a channel and tell it which events to watch. Adding it to a channel alone doesn't start monitoring; you have to ask. It can then investigate new bug reports and prepare fixes for your review.
+- **Turn a design into a working app.** OpenAI's own teams hand dots a new design and get back a working app while they focus on customer feedback.
+- **Keep a project on track.** Give it the plan and the relevant channels, and ask it to track decisions, deadlines and open questions, and to message you only when something is at risk.
+
+A few habits make these safer and more useful:
+
+1. **Start with read-only access.** Let the dot read issues, logs and feedback first. Add write access one app at a time, once you trust what it produces.
+2. **Write Custom Rules for the actions that matter.** For example, "Ask before taking action" for pushing to a shared branch or messaging customers, and "Hand off to you" for deleting anything.
+3. **Review every pull request.** Run the change yourself, watch the attached video, and read the diff. OpenAI's docs also warn that a completed run doesn't by itself prove the result was achieved.
+4. **Keep secrets out.** Use the private sign-in form for websites, never paste keys into the chat, and don't give the dot a machine that has production credentials lying around.
+5. **Check Activity and Scheduled once a day.** Recurring tasks keep running until you cancel them.
+
+Give it a clear first responsibility in plain words, the way OpenAI's docs suggest. For example:
+
+```text
+Watch new bug reports in #support-bugs. For each one, investigate the
+cause in our repository and prepare a fix with tests as a draft pull
+request. Don't merge anything. Message me in ChatGPT if a report looks
+like a security issue.
+```
+
+## What should I do next?
+
+- **Read OpenAI's docs on controls** before you connect anything: [Control your dot](https://learn.chatgpt.com/docs/dots/controls) covers review, Custom Rules and how to stop work.
+- **Learn the risks in depth** with [prompt injection, explained](/blog/prompt-injection-ai-security) and [keeping secrets out of AI prompts](/blog/secrets-in-ai-prompts).
+- **Get better at reviewing AI output** with [how to test AI output with evals](/blog/test-ai-output-with-evals) and [tips for AI coding assistants](/blog/ai-coding-assistants-tips).
+- **See how agents and tools fit together** in [AI agents vs MCP](/blog/ai-agents-vs-mcp) and [What is MCP?](/blog/what-is-mcp).

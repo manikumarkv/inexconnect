@@ -1,0 +1,834 @@
+---
+title: 'MCP in Claude Code and agents: scopes, secrets, resources'
+date: 2026-10-16
+draft: false
+summary: Share MCP servers through a committed .mcp.json without committing tokens, keep personal servers
+  in user scope, and reuse the setup in the Agent SDK.
+seoDescription: Share MCP servers through a committed .mcp.json without committing tokens, keep personal
+  servers in user scope, and reuse the setup in the Agent SDK.
+author: mani
+tags:
+- ai
+- claude
+- mcp
+- claude-code
+category: How-to
+series: 'Claude certification prep: tool design and MCP'
+seriesPart: 4
+featured: false
+showToc: true
+tldr:
+- Put team servers in a committed .mcp.json at the project root. Keep personal and experimental servers
+  in ~/.claude.json with local or user scope.
+- Write every secret in .mcp.json as a ${VAR} reference. Claude Code expands it from each developer's
+  environment, so the file can be shared and the token stays out of git.
+- Expose a catalog (runbooks, schemas, issue lists) as an MCP resource, so Claude can see what exists
+  in one read instead of searching for it.
+- The Agent SDK takes the same server shapes in its mcpServers option. Set strictMcpConfig when the app
+  should use only the servers in code.
+faq:
+- question: What is the difference between local and user scope in Claude Code?
+  answer: Both are private to you and stored in ~/.claude.json. A local-scoped server (the default) loads
+    only in the project where you added it. A user-scoped server loads in all your projects.
+- question: Does Claude Code expand ${VAR} in .mcp.json automatically?
+  answer: Yes, in command, args, env, url and headers, with ${VAR:-default} for a fallback. If a variable
+    is not set and has no default, the server still loads with the raw ${VAR} text and Claude Code shows
+    a warning.
+- question: Why does my MCP server get an empty token?
+  answer: In a remote server's url and headers, Claude Code reads its own and your cloud provider's credentials
+    as empty, such as ANTHROPIC_API_KEY. Copy the value into a variable with your own name and reference
+    that.
+- question: Does the Agent SDK read .mcp.json?
+  answer: Yes, when the project setting source is enabled, which it is by default. To use only the servers
+    you pass in code, set strictMcpConfig to true or leave project out of settingSources.
+---
+
+To give a whole team the same MCP servers, commit a `.mcp.json` file at the project root and write every token in it as `${VAR}`, so each developer's secret stays in their own environment. Servers that only you use go in your personal config, `~/.claude.json`. In this post you write a shared `.mcp.json` with two servers, give an agent built with the Agent SDK the same setup, and check both offline: the JSON parses, no secret is written into it, and the TypeScript compiles.
+
+This is task statement 2.4 of the [Claude Certified Architect – Foundations exam guide](https://anthropic-partners.skilljar.com/claude-certified-architect-foundations-certification): "Integrate MCP servers into Claude Code and agent workflows". It sits in Domain 2, Tool Design & MCP Integration, which is 18% of the exam. Earlier parts of this series covered tool descriptions (2.1), structured errors (2.2) and tool distribution (2.3); they are drafts for now. This post is about connecting servers, not building them. For that, see [Build your first MCP server](/blog/build-your-first-mcp-server), [How to test and debug an MCP server](/blog/test-and-debug-mcp-server) and [How to publish an MCP server](/blog/publish-mcp-server).
+
+## What does task statement 2.4 test?
+
+The guide lists four things to know and five skills. In plain words:
+
+| The guide asks you to… | In practice |
+| --- | --- |
+| Know project vs user scope | `.mcp.json` in the repo for team servers; `~/.claude.json` for your own |
+| Know `${VAR}` expansion | A shared file says `Bearer ${GITHUB_TOKEN}`; each developer sets the variable |
+| Know that all servers' tools are available together | Claude sees one pool of tools from every connected server |
+| Know MCP resources | A catalog Claude can read, instead of searching for what exists |
+| Configure a shared server with a token | Project scope plus a `${VAR}` header |
+| Configure a personal server | User scope, so teammates don't get it |
+| Improve MCP tool descriptions | So Claude stops falling back to built-in text search |
+| Choose community vs custom servers | Use a maintained server for Jira or GitHub; build only for your own workflows |
+| Expose catalogs as resources | Fewer exploratory tool calls |
+
+If MCP is new to you, start with [What is MCP?](/blog/what-is-mcp). It explains servers, tools and resources, and adds a first server to Claude Code.
+
+## Where does an MCP server's config live?
+
+The [Claude Code MCP docs](https://code.claude.com/docs/en/mcp#mcp-installation-scopes) define three scopes. The scope decides which projects load the server and who else gets it.
+
+| Scope | Loads in | Shared with the team | Stored in |
+| --- | --- | --- | --- |
+| Local (the default) | This project only | No | `~/.claude.json`, under this project's path |
+| Project | This project only | Yes, through git | `.mcp.json` at the project root |
+| User | All your projects | No | `~/.claude.json`, at the top level |
+
+The exam guide only contrasts project and user scope. Local scope is the third option, and it is what you get when you don't pass `--scope`. Both local and user scope live in your home folder, so neither ever reaches git.
+
+When the same server name is defined in more than one scope, Claude Code connects once and uses the whole entry from the highest one: local, then project, then user. Fields are not merged across scopes. That lets you point a team server at your own test endpoint without editing the shared file.
+
+```mermaid
+flowchart TD
+  Q{"Who needs this server?"} -- "the whole team" --> P["Project scope<br/>.mcp.json, committed"]
+  Q -- "only me, in this repo" --> L["Local scope<br/>~/.claude.json, per project"]
+  Q -- "only me, everywhere" --> U["User scope<br/>~/.claude.json, top level"]
+  P --> S{"Does it need a secret?"}
+  S -- yes --> V["Write it as ${VAR}<br/>each developer sets the variable"]
+  S -- no --> C["Commit as is"]
+```
+
+One more rule matters for security. In an interactive session, Claude Code asks you to approve the servers in a project's `.mcp.json` before it uses them, because a cloned repository could name any server. In `claude -p` runs and Agent SDK sessions there is nobody to ask, so project servers load without the prompt.
+
+## How do I keep tokens out of a shared .mcp.json?
+
+Use environment variable expansion. Claude Code replaces `${VAR}` with the value of `VAR` from your environment, and `${VAR:-default}` uses `default` when `VAR` is not set. The docs list where expansion works: `command`, `args`, `env`, `url` and `headers`.
+
+```json
+{
+  "mcpServers": {
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_MCP_PAT}"
+      }
+    }
+  }
+}
+```
+
+The file is safe to commit: it says which variable to use, not what is in it. Three details from the docs are easy to miss:
+
+- **A missing variable doesn't stop the server.** If `GITHUB_MCP_PAT` isn't set and has no default, Claude Code warns in `claude mcp list` and `/mcp`, and sends the raw text `${GITHUB_MCP_PAT}`. The server then rejects it.
+- **Some names always read as empty for remote servers.** In a remote server's `url` and `headers`, Claude Code reads its own credentials (such as `ANTHROPIC_API_KEY`), your cloud provider's credentials and a few others (such as `NPM_TOKEN`) as empty. That stops a repository's `.mcp.json` from sending your keys to a server it names. The docs give examples, not a full list, so use a variable name of your own, like `GITHUB_MCP_PAT` here. The exam guide's example is `${GITHUB_TOKEN}`; the idea is the same.
+- **`/mcp` and `claude mcp list` show `${VAR}` by name**, not the resolved value, so a screenshot of them doesn't leak the token.
+
+For a broader look at where secrets leak in AI tools, see [Secrets in AI prompts](/blog/secrets-in-ai-prompts).
+
+## Should I use claude mcp add or edit the file?
+
+Both write the same JSON. The command is quicker for one server, and it checks the format for you. Editing `.mcp.json` by hand is fine for a file you review in a pull request.
+
+```bash
+$ claude mcp add --transport http --scope project github https://api.githubcopilot.com/mcp/ --header 'Authorization: Bearer ${GITHUB_MCP_PAT}'
+$ claude mcp add --scope project --transport stdio runbooks -- node '${CLAUDE_PROJECT_DIR:-.}/mcp/runbooks/server.ts'
+```
+
+We ran these two commands in an empty folder. They wrote the same `.mcp.json` as the hand-written file in the next section, plus an empty `"env": {}` on the stdio server.
+
+Note the **single quotes**. In double quotes, your shell replaces `${GITHUB_MCP_PAT}` with the real token before Claude Code sees it, and the token lands in the committed file. The `--` separates Claude Code's own options from the server's command; everything after it runs as written.
+
+The `--transport` choice depends on where the server runs:
+
+| Transport | What it is | When to use it |
+| --- | --- | --- |
+| `stdio` | Claude Code starts the server as a local process and talks over stdin and stdout | The server's docs give you a command, like `npx …` or `node server.ts` |
+| `http` | Streamable HTTP to a URL | Remote servers. The docs call it the recommended option |
+| `sse` | Server-Sent Events | Deprecated. Only for servers that offer nothing else |
+| `ws` | WebSocket | Only through `.mcp.json` or `claude mcp add-json`, not `--transport` |
+
+In JSON, a stdio entry has a `command`; an HTTP entry has `"type": "http"` and a `url`. An entry with a `url` but no `type` is an error: Claude Code reads a missing `type` as stdio and skips the server.
+
+To check what you configured, run `claude mcp list` or `claude mcp get <name>` in your terminal, or `/mcp` inside a session. Remove a server with `claude mcp remove <name>`.
+
+## Are tools from every server available at once?
+
+Yes. Claude Code connects to every configured server, and their tools join one pool next to the built-in tools. Each MCP tool gets a prefixed name, `mcp__<server>__<tool>`, so `get_runbook` on the `runbooks` server becomes `mcp__runbooks__get_runbook`.
+
+The current docs add a detail the exam guide doesn't mention: [tool search](https://code.claude.com/docs/en/mcp#scale-with-mcp-tool-search) is on by default. Only tool names and server instructions load at the start; Claude loads a tool's full definition when it needs it. All tools are still available together, but the server's `instructions` and each tool's description decide whether Claude goes looking for them. Set `alwaysLoad: true` on a server whose tools Claude needs on every turn.
+
+This is also why thin descriptions lose. If a code search tool says only "Searches code", Claude has no reason to prefer it over the text search it already knows. On macOS and Linux, that is `grep` through the Bash tool; the [tools reference](https://code.claude.com/docs/en/tools-reference) explains when the separate Grep tool is present. Say what the MCP tool can do that text search can't, what it returns, and when to use it. Part 1 of this series, on tool descriptions, covers how to write them.
+
+## When should I expose data as a resource instead of a tool?
+
+The MCP docs on [server concepts](https://modelcontextprotocol.io/docs/learn/server-concepts) split the jobs by who is in control:
+
+| | Tools | Resources |
+| --- | --- | --- |
+| What it is | A function with input that does something | Read-only data with a URI, like `runbooks://index` |
+| Who decides to use it | The model | The application (the MCP client) |
+| Protocol calls | `tools/list`, `tools/call` | `resources/list`, `resources/read` |
+| Good for | Searching, creating, updating | Catalogs, schemas, docs, an index of what exists |
+
+A catalog is the classic resource: a list of issue summaries, a documentation tree or a database schema. Without one, the agent has to discover what exists by calling tools: list a folder, open a page, search again. With one, a single read shows everything, and Claude calls a tool only for the item it needs.
+
+In Claude Code you can `@`-mention a resource, like `@runbooks:runbooks://index`, and it is attached to your prompt. Claude also gets built-in `ListMcpResourcesTool` and `ReadMcpResourceTool` tools to find and read resources itself.
+
+## Should I build my own server or use an existing one?
+
+Use an existing server for standard systems, and build only for what is specific to your team. A maintained server for GitHub, Jira or Notion already handles the API, pagination and sign-in, and it gets fixes when the API changes. Writing your own copy means owning all of that.
+
+Start with the [Anthropic Directory](https://claude.ai/directory), which lists reviewed connectors (you can add any remote server listed there with `claude mcp add`), and the vendor's own docs. The Claude Code docs warn to check that you trust each server, because servers that fetch outside content can expose you to prompt injection. Build a custom server for things no one else has: your runbooks, your deploy steps, your internal services. That is the split in the hands-on below: GitHub's official server, plus a small team-specific runbooks server. If a custom server is what you need, [How to add MCP to an existing app](/blog/add-mcp-to-existing-app) covers the design side.
+
+## Try it: a shared .mcp.json and the same setup in the Agent SDK
+
+You'll set up a repository for a support team. It shares two MCP servers: GitHub's remote server, which needs a token, and a local runbooks server that exposes its catalog as a resource. Then you give an Agent SDK app the same two servers, and test everything without starting Claude.
+
+**You need:** Node.js 22.18 or later, which runs `.ts` files directly because [type stripping is on by default](https://nodejs.org/docs/latest-v22.x/api/typescript.html). No API key and no GitHub token.
+
+
+
+<Steps>
+
+
+<Step title="Create the project">
+
+```bash
+$ mkdir support-agent
+$ cd support-agent
+$ npm init -y
+$ npm pkg set type=module
+```
+
+Install the [Agent SDK](https://code.claude.com/docs/en/agent-sdk/overview), the [MCP TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk) server and client packages, and Zod:
+
+
+
+```bash
+npm install @anthropic-ai/claude-agent-sdk @modelcontextprotocol/server @modelcontextprotocol/client zod
+```
+
+
+
+
+
+```bash
+npm install -D typescript @types/node
+```
+
+
+
+
+
+**tsconfig.json**
+
+```json
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "target": "esnext",
+    "module": "nodenext",
+    "rewriteRelativeImportExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    "allowImportingTsExtensions": true,
+    "strict": true,
+    "types": ["node"]
+  }
+}
+```
+
+
+
+</Step>
+
+
+
+<Step title="Write the shared .mcp.json">
+
+
+
+**.mcp.json**
+
+```json
+{
+  "mcpServers": {
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_MCP_PAT}"
+      }
+    },
+    "runbooks": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["${CLAUDE_PROJECT_DIR:-.}/mcp/runbooks/server.ts"]
+    }
+  }
+}
+```
+
+
+
+- **`github`** is GitHub's [remote MCP server](https://github.com/github/github-mcp-server), over HTTP. Its token is a `${GITHUB_MCP_PAT}` reference, so the file holds no secret.
+- **`runbooks`** is the team's own server, started as a local process. Claude Code sets `CLAUDE_PROJECT_DIR` inside the server's environment, not in its own, so a reference to it in `args` needs a default: `${CLAUDE_PROJECT_DIR:-.}`. The docs use that exact form.
+
+Each developer then sets the token in their own shell, or loads it from a secret manager. Use a fine-grained GitHub token with read access to the repositories the agent needs:
+
+```bash
+$ export GITHUB_MCP_PAT=YOUR_GITHUB_PAT
+```
+
+</Step>
+
+
+
+<Step title="Add a personal server at user scope">
+
+A server only you use stays out of `.mcp.json`. This one adds the Claude Code docs server for all your projects:
+
+```bash
+$ claude mcp add --transport http --scope user claude-code-docs https://code.claude.com/docs/mcp
+```
+
+It goes to the top level of `~/.claude.json`, so your teammates never see it. To try a server in this repository only, leave out `--scope` and it gets local scope.
+
+</Step>
+
+
+
+<Step title="Write the runbooks server">
+
+One resource holds the catalog, and one tool returns the steps of a single runbook.
+
+
+
+**mcp/runbooks/runbooks.ts**
+
+```ts
+import { McpServer } from '@modelcontextprotocol/server';
+import { z } from 'zod';
+
+export interface Runbook {
+  slug: string;
+  title: string;
+  service: string;
+  updated: string; // YYYY-MM-DD
+  summary: string;
+  steps: string[];
+}
+
+// In a real team this would come from your docs repo or wiki.
+export const RUNBOOKS: Runbook[] = [
+  {
+    slug: 'payments-5xx',
+    title: 'Payments API returns 5xx errors',
+    service: 'payments',
+    updated: '2026-09-12',
+    summary: 'Card processor outage or a bad deploy. Check the processor status first.',
+    steps: ['Check the card processor status page.', 'Compare the error start time with the last deploy.', 'Roll back if a deploy matches.'],
+  },
+  {
+    slug: 'queue-backlog',
+    title: 'Order queue backlog over 10,000',
+    service: 'orders',
+    updated: '2026-08-30',
+    summary: 'Workers are stuck or too few. Scale workers before you purge anything.',
+    steps: ['Check worker health in the dashboard.', 'Scale workers to 2x.', 'Never purge the queue without an incident lead.'],
+  },
+  {
+    slug: 'expired-tls-cert',
+    title: 'TLS certificate expired on a public endpoint',
+    service: 'edge',
+    updated: '2026-07-04',
+    summary: 'Renewal job failed. Renew by hand, then fix the job.',
+    steps: ['Renew the certificate with the edge team runbook.', 'Re-run the renewal job and check its logs.'],
+  },
+];
+
+export const INDEX_URI = 'runbooks://index';
+
+export function createRunbooksServer(): McpServer {
+  const server = new McpServer(
+    { name: 'runbooks', version: '1.0.0' },
+    { instructions: 'Team incident runbooks. Read runbooks://index to see every runbook, then call get_runbook for the steps.' },
+  );
+
+  // A resource: the catalog. One read shows everything that exists, no searching needed.
+  server.registerResource(
+    'runbook-index',
+    INDEX_URI,
+    {
+      title: 'Runbook index',
+      description: 'Every incident runbook: slug, title, service, last update and a one-line summary.',
+      mimeType: 'application/json',
+    },
+    async (uri) => ({
+      contents: [
+        {
+          uri: uri.href,
+          mimeType: 'application/json',
+          text: JSON.stringify(RUNBOOKS.map(({ steps, ...entry }) => entry)),
+        },
+      ],
+    }),
+  );
+
+  // A tool: an action Claude decides to take, with an input.
+  server.registerTool(
+    'get_runbook',
+    {
+      title: 'Get one runbook',
+      description:
+        'Return the full steps of one incident runbook by its slug, like "payments-5xx". ' +
+        'Use this instead of searching the repository: runbooks live in this server, not in the code. ' +
+        'The list of slugs is in the runbooks://index resource. ' +
+        'Returns { slug, title, service, updated, steps }, or an error listing valid slugs when the slug is unknown.',
+      inputSchema: z.object({ slug: z.string().describe('Runbook slug from runbooks://index, e.g. "queue-backlog"') }),
+      annotations: { readOnlyHint: true },
+    },
+    async ({ slug }) => {
+      const runbook = RUNBOOKS.find((r) => r.slug === slug);
+      if (!runbook) {
+        const valid = RUNBOOKS.map((r) => r.slug).join(', ');
+        return { content: [{ type: 'text', text: `No runbook "${slug}". Valid slugs: ${valid}.` }], isError: true };
+      }
+      const { summary, ...full } = runbook;
+      return { content: [{ type: 'text', text: JSON.stringify(full) }] };
+    },
+  );
+
+  return server;
+}
+```
+
+
+
+
+
+**mcp/runbooks/server.ts**
+
+```ts
+import { StdioServerTransport } from '@modelcontextprotocol/server/stdio';
+import { createRunbooksServer } from './runbooks.ts';
+
+// Claude Code starts this file as a local process and talks to it over stdin/stdout.
+await createRunbooksServer().connect(new StdioServerTransport());
+```
+
+
+
+The `get_runbook` description says what the tool returns, where valid slugs come from, and that runbooks are not in the repository. That last line is what stops Claude from searching the code with `grep` instead. The `instructions` string helps tool search find the server.
+
+</Step>
+
+
+
+<Step title="Check the config for inline secrets">
+
+This checker reads `.mcp.json` and fails on the mistakes this task statement is about: a token written out, a password inside a URL, a `url` with no `type`, and a credential name that Claude Code would send as empty.
+
+
+
+**check-mcp-json.ts**
+
+```ts
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
+// Shapes of real credentials. Add the providers your team uses.
+const SECRET_SHAPES: [string, RegExp][] = [
+  ['a GitHub token', /\b(gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})/],
+  ['an Anthropic API key', /\bsk-ant-[A-Za-z0-9_-]{10,}/],
+  ['a Slack token', /\bxox[abprs]-[A-Za-z0-9-]{10,}/],
+  ['an AWS access key ID', /\bAKIA[0-9A-Z]{16}\b/],
+  ['a password inside a URL', /\/\/[^/\s:@]+:[^/\s@$]+@/],
+];
+
+// Header and env names that carry secrets, so their values must be ${VAR} references.
+const SECRET_NAME = /auth|token|secret|password|passwd|api[-_]?key|cookie/i;
+// "${VAR}", "Bearer ${VAR}", "${A}:${B}"... nothing written out except an auth scheme word.
+const ONLY_REFERENCES = /^(?:(?:Bearer|Basic|Token)\s+)?(?:\$\{[A-Za-z_][A-Za-z0-9_]*(?::-[^}]*)?\}[:\s]*)+$/;
+const REFERENCE = /\$\{([A-Za-z_][A-Za-z0-9_]*)(:-[^}]*)?\}/g;
+// Claude Code reads these as empty in a remote server's url and headers. A sample from the docs, not the full list.
+const EMPTY_FOR_REMOTE = new Set(['ANTHROPIC_API_KEY', 'ANTHROPIC_AUTH_TOKEN', 'AWS_BEARER_TOKEN_BEDROCK', 'NPM_TOKEN', 'HTTPS_PROXY']);
+const REMOTE_TYPES = new Set(['http', 'streamable-http', 'sse', 'ws']);
+
+export interface CheckResult {
+  errors: string[];
+  required: string[]; // variables referenced without a :-default
+}
+
+type Entry = Record<string, unknown>;
+
+export function checkMcpConfig(config: unknown): CheckResult {
+  const errors: string[] = [];
+  const required = new Set<string>();
+  const servers = (config as { mcpServers?: unknown })?.mcpServers;
+  if (!servers || typeof servers !== 'object') return { errors: ['No "mcpServers" object at the top level'], required: [] };
+
+  for (const [name, raw] of Object.entries(servers as Record<string, unknown>)) {
+    const entry = raw as Entry;
+    const where = `mcpServers.${name}`;
+    if (!/^[A-Za-z0-9_-]+$/.test(name)) errors.push(`${where}: use only letters, numbers, - and _ in server names`);
+
+    const remote = typeof entry.url === 'string';
+    if (remote && !REMOTE_TYPES.has(String(entry.type))) errors.push(`${where}: has a url but no "type": "http" (or sse/ws)`);
+    if (!remote && typeof entry.command !== 'string') errors.push(`${where}: needs a "command" (stdio) or a "url" and "type"`);
+    if (entry.type === 'sdk') errors.push(`${where}: "type": "sdk" only works in code, not in a config file`);
+
+    // Every string in the entry: no literal credentials, and collect ${VAR} references.
+    for (const [path, value] of strings(entry, where)) {
+      for (const [label, shape] of SECRET_SHAPES) {
+        if (shape.test(value)) errors.push(`${path}: looks like ${label}. Use a \${VAR} reference instead`);
+      }
+      for (const [, variable, fallback] of value.matchAll(REFERENCE)) {
+        if (!fallback) required.add(variable);
+        const inRemoteRequest = remote && (path === `${where}.url` || path.startsWith(`${where}.headers.`));
+        if (inRemoteRequest && EMPTY_FOR_REMOTE.has(variable)) {
+          errors.push(`${path}: \${${variable}} reads as empty for remote servers. Copy it into a variable with your own name`);
+        }
+      }
+    }
+
+    // Secret-named headers and env values must be references only.
+    for (const field of ['headers', 'env'] as const) {
+      for (const [key, value] of Object.entries((entry[field] ?? {}) as Record<string, unknown>)) {
+        if (SECRET_NAME.test(key) && typeof value === 'string' && !ONLY_REFERENCES.test(value)) {
+          errors.push(`${where}.${field}.${key}: write the secret as \${VAR}, not as a literal value`);
+        }
+      }
+    }
+  }
+  return { errors, required: [...required].sort() };
+}
+
+function* strings(value: unknown, path: string): Generator<[string, string]> {
+  if (typeof value === 'string') yield [path, value];
+  else if (Array.isArray(value)) for (const [i, item] of value.entries()) yield* strings(item, `${path}[${i}]`);
+  else if (value && typeof value === 'object') for (const [k, v] of Object.entries(value)) yield* strings(v, `${path}.${k}`);
+}
+
+// CLI: node check-mcp-json.ts [path]
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  const file = process.argv[2] ?? '.mcp.json';
+  const { errors, required } = checkMcpConfig(JSON.parse(readFileSync(file, 'utf8')));
+  for (const error of errors) console.error(`✘ ${error}`);
+  const missing = required.filter((variable) => !process.env[variable]);
+  if (missing.length > 0) console.warn(`! Not set in this shell: ${missing.join(', ')}`);
+  if (errors.length > 0) process.exit(1);
+  console.log(`✔ ${file}: no inline secrets. Needs: ${required.join(', ') || 'nothing'}`);
+}
+```
+
+
+
+```bash
+$ node check-mcp-json.ts
+```
+
+```text
+! Not set in this shell: GITHUB_MCP_PAT
+✔ .mcp.json: no inline secrets. Needs: GITHUB_MCP_PAT
+```
+
+The warning is expected in a shell without the token. Run the checker in CI too: it needs no token, because it only reads the file. The secret shapes are a short sample; a dedicated secret scanner covers far more.
+
+</Step>
+
+
+
+<Step title="Give the Agent SDK the same servers">
+
+The Agent SDK's [`mcpServers` option](https://code.claude.com/docs/en/agent-sdk/mcp) takes the same shapes as `.mcp.json`. In code you read the token from `process.env` yourself, so there is no `${VAR}` syntax here.
+
+
+
+**mcp-config.ts**
+
+```ts
+import { resolve } from 'node:path';
+import type { McpServerConfig } from '@anthropic-ai/claude-agent-sdk';
+
+// The same two servers as .mcp.json, for an Agent SDK app.
+// The token is read from the environment when the app starts; it is never written in a file.
+export function buildMcpServers(
+  env: NodeJS.ProcessEnv = process.env,
+  projectDir: string = process.cwd(),
+): Record<string, McpServerConfig> {
+  const token = env.GITHUB_MCP_PAT;
+  if (!token) throw new Error('GITHUB_MCP_PAT is not set. Export it in your shell or load it from your secret manager.');
+
+  return {
+    github: {
+      type: 'http',
+      url: 'https://api.githubcopilot.com/mcp/',
+      headers: { Authorization: `Bearer ${token}` },
+    },
+    runbooks: {
+      type: 'stdio',
+      command: 'node',
+      args: [resolve(projectDir, 'mcp/runbooks/server.ts')],
+    },
+  };
+}
+
+// Pre-approve only what the agent needs: one GitHub tool and the runbooks server's tools.
+export const allowedTools = ['mcp__github__list_issues', 'mcp__runbooks__*'];
+```
+
+
+
+
+
+**agent.ts**
+
+```ts
+import { query } from '@anthropic-ai/claude-agent-sdk';
+import { allowedTools, buildMcpServers } from './mcp-config.ts';
+
+const prompt =
+  process.argv[2] ??
+  'The payments API is returning 503 errors. Which runbook applies? List open issues about it in acme/payments.';
+
+for await (const message of query({
+  prompt,
+  options: {
+    model: 'claude-opus-5-5',
+    mcpServers: buildMcpServers(),
+    strictMcpConfig: true, // only the servers above; ignore .mcp.json, user config and plugins
+    allowedTools,
+    maxTurns: 15,
+  },
+})) {
+  if (message.type === 'system' && message.subtype === 'init') {
+    const down = message.mcp_servers.filter((s) => s.status === 'failed' || s.status === 'needs-auth');
+    if (down.length > 0) console.error(`Not usable: ${down.map((s) => `${s.name} (${s.status})`).join(', ')}`);
+  }
+  if (message.type === 'result') {
+    console.log(message.subtype === 'success' ? message.result : `Stopped: ${message.subtype}`);
+  }
+}
+```
+
+
+
+What the options do:
+
+- **`strictMcpConfig: true`** makes the agent use only the servers in code, and ignore `.mcp.json`, user config and plugins. Without it, the SDK also loads the project's `.mcp.json` by default, without an approval prompt. If you'd rather reuse `.mcp.json` as the single source, drop `mcpServers` and `strictMcpConfig` and keep the default setting sources, which include `project`.
+- **`allowedTools`** pre-approves MCP tools by their prefixed names. MCP tools need explicit permission; `mcp__runbooks__*` allows every tool on that server.
+- **The `init` message** reports each server's status. `failed` or `needs-auth` means its tools are missing, and Claude may fall back to built-in tools without telling you.
+
+</Step>
+
+
+
+<Step title="Test it without an API key">
+
+The tests check the config files, compare the SDK config with `.mcp.json`, and connect a real MCP client to the runbooks server in memory. Nothing here calls Claude or GitHub.
+
+
+
+**mcp.test.ts**
+
+```ts
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { test } from 'node:test';
+import { Client } from '@modelcontextprotocol/client';
+import { InMemoryTransport } from '@modelcontextprotocol/server';
+import { checkMcpConfig } from './check-mcp-json.ts';
+import { buildMcpServers } from './mcp-config.ts';
+import { INDEX_URI, createRunbooksServer } from './mcp/runbooks/runbooks.ts';
+
+const projectConfig = JSON.parse(readFileSync('.mcp.json', 'utf8'));
+
+test('.mcp.json has no inline secrets and names the variables it needs', () => {
+  const { errors, required } = checkMcpConfig(projectConfig);
+  assert.deepEqual(errors, []);
+  assert.deepEqual(required, ['GITHUB_MCP_PAT']); // CLAUDE_PROJECT_DIR has a :-default
+});
+
+test('the checker catches the classic mistakes', () => {
+  const bad = {
+    mcpServers: {
+      github: { type: 'http', url: 'https://api.githubcopilot.com/mcp/', headers: { Authorization: 'Bearer ghp_' + 'a'.repeat(36) } },
+      db: { command: 'npx', args: ['-y', '@bytebase/dbhub', '--dsn', 'postgres://app:changeme@localhost:5432/app'] },
+      jira: { url: 'https://jira.example.com/mcp' },
+      proxy: { type: 'http', url: 'https://mcp.example.com/mcp', headers: { 'X-Api-Key': '${ANTHROPIC_API_KEY}' } },
+    },
+  };
+  const { errors } = checkMcpConfig(bad);
+  for (const error of errors) console.log(`  ${error}`);
+  assert.equal(errors.length, 5);
+});
+
+test('the Agent SDK config matches .mcp.json and fills in the token at run time', () => {
+  const fakeToken = 'test-token-not-real';
+  const servers = buildMcpServers({ GITHUB_MCP_PAT: fakeToken }, '/work/acme');
+  assert.deepEqual(Object.keys(servers), Object.keys(projectConfig.mcpServers));
+  for (const [name, entry] of Object.entries(servers)) assert.equal(entry.type, projectConfig.mcpServers[name].type);
+  assert.deepEqual(servers.github, {
+    type: 'http',
+    url: projectConfig.mcpServers.github.url,
+    headers: { Authorization: `Bearer ${fakeToken}` },
+  });
+  assert.deepEqual(servers.runbooks, { type: 'stdio', command: 'node', args: ['/work/acme/mcp/runbooks/server.ts'] });
+  assert.throws(() => buildMcpServers({}), /GITHUB_MCP_PAT is not set/);
+});
+
+test('one resource read shows every runbook; the tool returns the steps', async () => {
+  const [clientSide, serverSide] = InMemoryTransport.createLinkedPair();
+  await createRunbooksServer().connect(serverSide);
+  const client = new Client({ name: 'test', version: '1.0.0' });
+  await client.connect(clientSide);
+
+  const { resources } = await client.listResources();
+  assert.deepEqual(resources.map((r) => r.uri), [INDEX_URI]);
+
+  const index = await client.readResource({ uri: INDEX_URI });
+  const catalog = JSON.parse((index.contents[0] as { text: string }).text) as { slug: string; title: string }[];
+  for (const entry of catalog) console.log(`  ${entry.slug}: ${entry.title}`);
+  assert.equal(catalog.length, 3);
+
+  const { tools } = await client.listTools();
+  assert.deepEqual(tools.map((t) => t.name), ['get_runbook']);
+
+  const result = await client.callTool({ name: 'get_runbook', arguments: { slug: 'payments-5xx' } });
+  assert.match((result.content[0] as { text: string }).text, /Roll back if a deploy matches/);
+
+  const unknown = await client.callTool({ name: 'get_runbook', arguments: { slug: 'payments' } });
+  assert.equal(unknown.isError, true);
+  await client.close();
+});
+```
+
+
+
+```bash
+$ node --test --test-reporter=spec mcp.test.ts
+```
+
+```text
+  mcpServers.github.headers.Authorization: looks like a GitHub token. Use a ${VAR} reference instead
+  mcpServers.github.headers.Authorization: write the secret as ${VAR}, not as a literal value
+  mcpServers.db.args[3]: looks like a password inside a URL. Use a ${VAR} reference instead
+  mcpServers.jira: has a url but no "type": "http" (or sse/ws)
+  mcpServers.proxy.headers.X-Api-Key: ${ANTHROPIC_API_KEY} reads as empty for remote servers. Copy it into a variable with your own name
+  payments-5xx: Payments API returns 5xx errors
+  queue-backlog: Order queue backlog over 10,000
+  expired-tls-cert: TLS certificate expired on a public endpoint
+✔ .mcp.json has no inline secrets and names the variables it needs
+✔ the checker catches the classic mistakes
+✔ the Agent SDK config matches .mcp.json and fills in the token at run time
+✔ one resource read shows every runbook; the tool returns the steps
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+```
+
+This is our output on Node 22.22.2 with `@anthropic-ai/claude-agent-sdk` 0.3.287, `@modelcontextprotocol/server` and `@modelcontextprotocol/client` 2.3.0, and `zod` 4.6.5, with timings removed. The checker flags five problems in the bad config, and one resource read lists all three runbooks.
+
+Then type-check everything, including `agent.ts`, which you don't run here:
+
+```bash
+$ npx tsc
+```
+
+No output means no type errors.
+
+</Step>
+
+
+
+<Step title="Connect it for real">
+
+With `GITHUB_MCP_PAT` set, start `claude` in the folder. Expect a prompt to approve the two project servers, then run `/mcp`: both should show as connected, next to your user-scoped `claude-code-docs`. Type `@` to see `runbooks://index` in the list.
+
+What to expect, not a measured result: asked "which runbook applies to payments 503 errors?", Claude should read the index or call `get_runbook` instead of running `grep` over the repository. To run the agent, use `node agent.ts` with an API key set. Each run costs tokens.
+
+</Step>
+
+
+</Steps>
+
+
+
+## Common traps
+
+These are the mistakes that wrong answer options are built on.
+
+| Trap | Why it fails | Fix |
+| --- | --- | --- |
+| A personal or experimental server in `.mcp.json` | Everyone who pulls the repo gets it | Local or user scope |
+| A team server only in one person's `~/.claude.json` | Nobody else has it, and setups drift | Project scope, committed |
+| A real token in `.mcp.json` | It's in git history for good, even after you delete it | `${VAR}` reference; rotate a leaked token |
+| `--header "Bearer $TOKEN"` in double quotes | The shell writes the real token into the file | Single quotes around `${TOKEN}` |
+| `${ANTHROPIC_API_KEY}` in a remote server's header | Claude Code sends it as empty | A variable with your own name |
+| A custom server for Jira or GitHub | You maintain an API client someone else already maintains | A maintained server from the vendor or the Directory |
+| Expecting Claude to prefer an MCP tool just because it exists | A thin description loses to familiar text search | Describe what it does, returns, and when to use it |
+| Agents that search to learn what exists | Many exploratory calls before the real work | A catalog as an MCP resource |
+
+
+
+<Callout type="warning" title="If a token was ever committed, rotate it">
+
+Removing a token from `.mcp.json` doesn't remove it from git history or from clones that already have it. Revoke the token at the provider and create a new one, then switch the file to a `${VAR}` reference. Treat a `.mcp.json` from a repository you don't trust like any other code you are about to run: its stdio servers are commands on your machine.
+
+</Callout>
+
+
+
+## Practice questions
+
+These four questions are this blog's own, written for practice. They are not from the exam.
+
+**Question 1.** A teammate adds the team's tracker server with `claude mcp add --scope project --transport http tracker https://tracker.example.com/mcp --header "Authorization: Bearer ${TRACKER_TOKEN}"` and commits `.mcp.json`. A review finds the real token in the file. What went wrong?
+
+- A. Project scope never expands variables, so the token must go in user scope.
+- B. The double quotes let the shell replace `${TRACKER_TOKEN}` with its value before Claude Code saw it. Single quotes would have stored the reference.
+- C. `claude mcp add` always resolves variables before it saves, so `.mcp.json` must be edited by hand.
+- D. HTTP servers don't support headers in `.mcp.json`.
+
+**Question 2.** A developer wants to try a new, unreviewed MCP server in all of their projects for a week, without anyone else on the team getting it. Where should it go?
+
+- A. In each project's `.mcp.json`, on a branch.
+- B. In `.claude/settings.json`, committed.
+- C. In user scope, with `claude mcp add --scope user`, which stores it in `~/.claude.json`.
+- D. In a note in CLAUDE.md asking Claude to connect to it.
+
+**Question 3.** A team connects an MCP server whose `find_symbol` tool understands definitions, callers and imports across the monorepo. Its description is "Finds symbols." When asked "where is `chargeCard` called?", Claude keeps running text searches with `grep` instead. What should the team do first?
+
+- A. Rewrite the description: what it finds (definitions, call sites, imports), what it returns, and that it beats text search for code navigation.
+- B. Remove the Bash tool from every session so `grep` is no longer available.
+- C. Move the server from project scope to user scope.
+- D. Add a second MCP server that wraps `grep`.
+
+**Question 4.** An agent answers questions from a large set of design documents. Logs show it spends most of its calls listing folders and opening files just to learn which documents exist. Which change cuts those calls most directly?
+
+- A. Raise the agent's turn limit.
+- B. Put the full text of every document in the system prompt.
+- C. Expose a catalog of the documents (title, path, one-line summary) as an MCP resource the agent can read first.
+- D. Add more search tools with overlapping descriptions.
+
+## Answer key
+
+### Question 1
+
+**Answer: B.** The shell expands `${…}` inside double quotes, so Claude Code received and saved the literal token. In single quotes the text `${TRACKER_TOKEN}` reaches Claude Code, which stores it and expands it at run time. The strongest distractor is C: `claude mcp add` stores the reference as written; the problem was the shell, not the command. Rotate the leaked token too.
+
+### Question 2
+
+**Answer: C.** User scope is private and loads in all of your projects, which matches "all my projects, nobody else". The strongest distractor is A: a branch is still shared through git, and the server spreads when the branch is merged. Local scope would also be private, but only for one project.
+
+### Question 3
+
+**Answer: A.** Claude chooses tools from their descriptions. "Finds symbols." gives it no reason to prefer the MCP tool over text search it already knows. The strongest distractor is B: taking away Bash breaks many other tasks and still doesn't tell Claude what `find_symbol` is good for.
+
+### Question 4
+
+**Answer: C.** A resource lets the agent see what exists in one read, then open only the documents it needs. The strongest distractor is B: it removes the discovery calls but fills the context with text that is mostly irrelevant. A only lets the waste run longer.
+
+## What should I do next?
+
+- **Audit one repository.** Open its `.mcp.json`, or create one. Move personal servers out, replace every written-out secret with a `${VAR}` reference, and add the checker to CI.
+- **Move on to task statement 2.5**, "Select and apply built-in tools (Read, Write, Edit, Bash, Grep, Glob) effectively". The next post in this series covers it.
+- **Use Claude Code well day to day.** [Getting the most out of AI coding assistants](/blog/ai-coding-assistants-tips) covers context, CLAUDE.md and reviews.
+- **Plan and check your prep.** Follow the [six-week study plan](/blog/claude-architect-exam-study-plan), and test yourself with the [mock exam](/blog/claude-certification-mock-exam) when you've worked through Domain 2.

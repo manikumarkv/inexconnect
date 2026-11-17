@@ -1,0 +1,15 @@
+---
+interface Props {
+  type?: string;
+  title?: string;
+}
+const { type = "note", title } = Astro.props as Props;
+const label = title ?? (type === "warning" ? "Warning" : type === "tip" ? "Tip" : "Note");
+---
+
+<aside class={`callout callout-${type} my-6 rounded-[20px] border border-line border-l-4 ${type === "warning" ? "border-l-amber-500" : "border-l-coral"} bg-mist p-5`}>
+  <p class="font-bold text-charcoal">{label}</p>
+  <div class="mt-2 leading-relaxed text-slate [&>p]:mb-3 [&>p:last-child]:mb-0">
+    <slot />
+  </div>
+</aside>

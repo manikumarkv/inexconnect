@@ -102,3 +102,32 @@
   border-radius: 12px;
   margin: 1.2rem 0;
 }
+
+/* Numbered steps (Steps/Step components, converted from Markdoc). */
+.post-body .steps {
+  counter-reset: step;
+}
+.post-body .step {
+  counter-increment: step;
+  position: relative;
+  padding-left: 3.2rem;
+  margin: 1.4rem 0;
+}
+.post-body .step::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0.1rem;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 999px;
+  background: #ff5c50;
+  color: #ffffff;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.post-body .step > h3 {
+  margin-top: 0.2rem;
+}

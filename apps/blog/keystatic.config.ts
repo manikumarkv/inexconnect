@@ -45,6 +45,19 @@ export default config({
         body: fields.mdx({ label: "Body" }),
         seoTitle: fields.text({ label: "SEO title" }),
         seoDescription: fields.text({ label: "SEO description", multiline: true }),
+        category: fields.text({ label: "Category" }),
+        series: fields.text({ label: "Series" }),
+        seriesPart: fields.integer({ label: "Series part" }),
+        featured: fields.checkbox({ label: "Featured", defaultValue: false }),
+        showToc: fields.checkbox({ label: "Show table of contents", defaultValue: false }),
+        tldr: fields.array(fields.text({ label: "Point" }), { label: "TL;DR points" }),
+        faq: fields.array(
+          fields.object({
+            question: fields.text({ label: "Question" }),
+            answer: fields.text({ label: "Answer", multiline: true }),
+          }),
+          { label: "FAQ" },
+        ),
       },
     }),
     authors: collection({

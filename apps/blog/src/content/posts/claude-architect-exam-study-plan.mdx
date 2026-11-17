@@ -1,0 +1,328 @@
+---
+title: 'How to prepare for the Claude Certified Architect exam: a study plan'
+date: 2026-09-30
+draft: false
+summary: A six-week study plan for Claude Certified Architect – Foundations, weighted by the official
+  domains, with free courses, hands-on builds and a checklist.
+seoDescription: A six-week study plan for Claude Certified Architect – Foundations, weighted by the official
+  domains, with free courses, hands-on builds and a checklist.
+author: mani
+tags:
+- ai
+- claude
+- claude-code
+category: How-to
+series: Claude certification
+seriesPart: 3
+featured: false
+showToc: true
+tldr:
+- Start from the official exam guide. It lists 5 domains, their weights and 30 task statements, and the
+  exam is written against those task statements.
+- Split your study time by domain weight. Agentic architecture is 27% of the exam, so it gets the most
+  hours.
+- Build something every week. The guide's four preparation exercises map onto this plan, and the exam's
+  questions are set in production scenarios.
+- Use the guide's sample questions as a check at the end, and never share or look for real exam content.
+faq:
+- question: How long should I study for the Claude Certified Architect exam?
+  answer: The exam guide doesn't give a number of hours. This plan suggests six weeks at about 8 hours
+    a week, or a four-week version if your exam date is close. The guide expects candidates to have around
+    6 months of practical experience with the Claude API, Agent SDK, Claude Code and MCP.
+- question: Are the Anthropic Academy courses free?
+  answer: Yes. Every course this plan recommends shows "Register | FREE" on Anthropic Academy's Skilljar
+    catalog, checked on 30 September 2026.
+- question: Which domain has the biggest weight?
+  answer: Domain 1, agentic architecture and orchestration, at 27%. Claude Code configuration and prompt
+    engineering are 20% each, tool design and MCP is 18%, and context management and reliability is 15%.
+- question: Where can I find practice questions?
+  answer: 'The official exam guide contains sample questions with explanations. This blog''s mock exam,
+    the last part of this series, adds original practice questions. Never use leaked or "real" exam questions:
+    the exam''s NDA forbids sharing them.'
+---
+
+The best way to prepare for Claude Certified Architect – Foundations is to study by the official exam guide, give each domain time in line with its weight, and build a small project every week. This post gives you a six-week plan (and a four-week version) that maps each week to the guide's task statements, free Anthropic Academy courses, posts on this blog and a hands-on task.
+
+The plan is for developers with an exam date booked. It also works if you just want to learn the material, because every week ends with something you built, not something you memorized.
+
+## What does the exam guide say?
+
+Everything starts with the official exam guide. It's a PDF linked from the [certification page on Anthropic Partner Academy](https://anthropic-partners.skilljar.com/claude-certified-architect-foundations-certification). The guide calls itself "the authoritative reference" for candidates and tells you to read it in full before you schedule the exam. It describes the exam, lists what is tested, gives sample questions and suggests how to prepare.
+
+Here are the facts that shape a study plan (guide version 1.0, effective July 2026):
+
+| Item | What the guide says |
+| --- | --- |
+| Questions | 60, multiple-choice and multiple-response |
+| Time | 120 minutes |
+| Structure | 4 scenarios, picked at random from a bank of 6 |
+| Passing score | 720 on a scale of 100–1,000 |
+| Fee | $125 USD |
+| Score report | Pass or fail, a scaled score, and your percent correct in each domain |
+| Valid for | 12 months |
+
+The guide describes the ideal candidate as a solution architect with around 6 months of practical experience building with the Claude API, the Claude Agent SDK, Claude Code and MCP. If you're newer than that, stretch the plan and spend more time on the hands-on tasks. Who can register is covered in the first part of this series, [What Claude certifications are there, and can you take one?](/blog/what-are-claude-certifications).
+
+## How is the exam weighted?
+
+The exam covers five **domains** (topic areas). Each domain has a weight: roughly the share of scored questions that come from it. Each domain is split into **task statements**, short descriptions of one skill, such as "Design and implement agentic loops for autonomous task execution". The guide says exam items are written against these task statements, so they are your syllabus.
+
+
+
+**Claude Certified Architect – Foundations: domain weights**
+
+| domain | weight |
+| --- | --- |
+| 1. Agentic architecture | 27 |
+| 2. Tool design and MCP | 18 |
+| 3. Claude Code config | 20 |
+| 4. Prompt engineering | 20 |
+| 5. Context and reliability | 15 |
+
+
+
+| Domain | Weight | Task statements |
+| --- | --- | --- |
+| 1. Agentic architecture and orchestration | 27% | 1.1–1.7 (7) |
+| 2. Tool design and MCP integration | 18% | 2.1–2.5 (5) |
+| 3. Claude Code configuration and workflows | 20% | 3.1–3.6 (6) |
+| 4. Prompt engineering and structured output | 20% | 4.1–4.6 (6) |
+| 5. Context management and reliability | 15% | 5.1–5.6 (6) |
+
+The guide also lists what is **out of scope**. You don't need to study fine-tuning, API billing and authentication, deploying or hosting MCP servers, computer use, vision, streaming, rate limits, pricing calculations or tokenization details. That saves you real time.
+
+## How do I use this plan?
+
+
+
+<Steps>
+
+
+<Step title="Read the exam guide in full">
+
+Download the guide from the [certification page](https://anthropic-partners.skilljar.com/claude-certified-architect-foundations-certification) and read it once from start to end. Mark the task statements that feel unfamiliar. Those are where your extra hours go.
+
+</Step>
+
+
+
+<Step title="Split your hours by domain weight">
+
+Decide how many weeks you have and how many hours a week you can study. This small script splits your time by the weights in the guide. Save it as `plan.mjs`:
+
+
+
+**plan.mjs**
+
+```js
+// Domain weights from the official exam guide (section 4).
+const domains = [
+  ['1. Agentic architecture and orchestration', 27],
+  ['2. Tool design and MCP integration', 18],
+  ['3. Claude Code configuration and workflows', 20],
+  ['4. Prompt engineering and structured output', 20],
+  ['5. Context management and reliability', 15],
+];
+
+const weeks = Number(process.argv[2] ?? 6);
+const hoursPerWeek = Number(process.argv[3] ?? 8);
+const total = weeks * hoursPerWeek;
+
+console.log(`${weeks} weeks x ${hoursPerWeek} h = ${total} h of study\n`);
+for (const [name, weight] of domains) {
+  const hours = (total * weight) / 100;
+  console.log(`${name.padEnd(46)} ${String(weight).padStart(2)}%  ${hours.toFixed(1).padStart(5)} h`);
+}
+```
+
+
+
+Run it with your number of weeks and hours per week. It needs Node.js and nothing else:
+
+```bash
+$ node plan.mjs 6 8
+```
+
+```text
+6 weeks x 8 h = 48 h of study
+
+1. Agentic architecture and orchestration      27%   13.0 h
+2. Tool design and MCP integration             18%    8.6 h
+3. Claude Code configuration and workflows     20%    9.6 h
+4. Prompt engineering and structured output    20%    9.6 h
+5. Context management and reliability          15%    7.2 h
+```
+
+The weights come from the guide. The hours are only a suggestion: the guide doesn't say how long to study.
+
+</Step>
+
+
+
+<Step title="Follow one week at a time">
+
+Each week below has four parts: what to learn (the task statements), a free course, posts to read, and something to build. Do the build. The exam asks what you would do in a production scenario, and building is the fastest way to learn that.
+
+</Step>
+
+
+
+<Step title="Check yourself against the task statements">
+
+At the end of each week, go through that week's task statements. For each one, explain it out loud in two sentences and give one example of a wrong approach. If you can't, go back to it before you move on.
+
+</Step>
+
+
+
+<Step title="Finish with the sample questions and the checklist">
+
+In the last week, answer the sample questions in the guide, then work through the readiness checklist at the end of this post.
+
+</Step>
+
+
+</Steps>
+
+
+
+## What does the six-week plan look like?
+
+Domain 1 has the most weight and the most task statements, so it gets the first week and a half. The other domains get about a week each.
+
+| Week | Domains | Task statements | Guide exercise |
+| --- | --- | --- | --- |
+| 1 | 1 | 1.1–1.4 | – |
+| 2 | 1, 2 | 1.5–1.7, 2.1–2.2 | Exercise 1 |
+| 3 | 2, 3 | 2.3–2.5, 3.1–3.3 | – |
+| 4 | 3, 4 | 3.4–3.6, 4.1–4.3 | Exercise 2 |
+| 5 | 4, 5 | 4.4–4.6, 5.1–5.3 | Exercise 3 |
+| 6 | 5, review | 5.4–5.6 | Exercise 4 |
+
+All the courses below are on [Anthropic Academy](https://anthropic.skilljar.com/), Anthropic's course catalog. Each one showed "Register | FREE" when this post was written.
+
+### Week 1: agentic loops and multi-agent systems
+
+- **Learn:** 1.1 agentic loops, 1.2 coordinator-subagent systems, 1.3 subagent spawning and context passing, 1.4 multi-step workflows with enforcement and human handoffs.
+- **Course:** [Building with the Claude API](https://anthropic.skilljar.com/claude-with-the-anthropic-api) (the tool use and agent workflow modules) and [Introduction to subagents](https://anthropic.skilljar.com/introduction-to-subagents).
+- **Read:** [What is an AI agent?](/blog/what-is-an-ai-agent), [What is tool calling?](/blog/what-is-tool-calling) and [How to build your first AI agent in Node.js](/blog/build-your-first-ai-agent).
+- **Build:** the agent from the last post. It has a mocked run, so you don't need an API key. Trace one run and find the three places the guide cares about: where the loop checks `stop_reason`, where tool results go back into the conversation, and where it stops. Then add a fourth tool and watch how the model picks between them.
+
+### Week 2: hooks, sessions and tool descriptions
+
+- **Learn:** 1.5 Agent SDK hooks, 1.6 task decomposition, 1.7 session resume and fork; 2.1 tool descriptions, 2.2 structured error responses for MCP tools.
+- **Course:** the [Agent SDK docs](https://code.claude.com/docs/en/agent-sdk/overview) (hooks, subagents and sessions pages) and [Introduction to Model Context Protocol](https://anthropic.skilljar.com/introduction-to-model-context-protocol).
+- **Read:** [How to test, deploy and use your AI agent](/blog/test-deploy-ai-agent) and [How to test and debug an MCP server](/blog/test-and-debug-mcp-server).
+- **Build:** start the guide's Exercise 1. In your own words: give an agent 3–4 tools, two of them similar enough that only a good description tells them apart. Make each tool return a clear error with a category and a "can I retry?" flag. Add a hook that blocks one action above a limit and hands it to a human instead.
+
+### Week 3: MCP in practice and CLAUDE.md
+
+- **Learn:** 2.3 which tools each agent gets and `tool_choice`, 2.4 MCP servers in Claude Code and agents, 2.5 the built-in tools (Read, Write, Edit, Bash, Grep, Glob); 3.1 the CLAUDE.md hierarchy, 3.2 slash commands and skills, 3.3 path-specific rules.
+- **Course:** [Claude Code in Action](https://anthropic.skilljar.com/claude-code-in-action) and [Introduction to agent skills](https://anthropic.skilljar.com/introduction-to-agent-skills). [Model Context Protocol: Advanced Topics](https://anthropic.skilljar.com/model-context-protocol-advanced-topics) is optional: much of it is about transports and deployment, which the guide lists as out of scope.
+- **Read:** [What is MCP?](/blog/what-is-mcp), [How to build your first MCP server in TypeScript](/blog/build-your-first-mcp-server) and [Getting the most out of AI coding assistants](/blog/ai-coding-assistants-tips).
+- **Build:** finish Exercise 1. Then, in a real project, add a project `CLAUDE.md`, one rule in `.claude/rules/` that only loads for test files, and one skill in `.claude/skills/`. The [memory docs](https://code.claude.com/docs/en/memory) and [skills docs](https://code.claude.com/docs/en/skills) show the file formats.
+
+### Week 4: plan mode, CI and prompts that hold up
+
+- **Learn:** 3.4 plan mode vs direct execution, 3.5 iterative refinement, 3.6 Claude Code in CI/CD; 4.1 explicit criteria in prompts, 4.2 few-shot prompting, 4.3 structured output with tool use and JSON schemas.
+- **Course:** the "Automate Repeat Work" module of Claude Code in Action (headless runs, GitHub Actions and code review), and the prompt engineering module of Building with the Claude API.
+- **Read:** [What is prompt engineering?](/blog/what-is-prompt-engineering) and [How to write your first effective prompt](/blog/write-your-first-prompt).
+- **Build:** the guide's Exercise 2. Put a shared MCP server in the project's `.mcp.json`, reading its token from an environment variable with `${VAR}` ([MCP docs](https://code.claude.com/docs/en/mcp)). Then try three tasks with and without plan mode: a one-file bug fix, a change across many files, and a new feature with more than one good design. Finally, run Claude Code non-interactively with `claude -p` and `--output-format json`, as the [headless docs](https://code.claude.com/docs/en/headless) show.
+
+### Week 5: extraction, batches and long conversations
+
+- **Learn:** 4.4 validation and retry loops, 4.5 batch processing, 4.6 multi-pass review; 5.1 keeping key facts in long conversations, 5.2 escalation and ambiguity, 5.3 error propagation across agents.
+- **Course:** the tool integration module of Building with the Claude API (custom tools and batch operations) and the [Message Batches docs](https://platform.claude.com/docs/en/build-with-claude/batch-processing).
+- **Read:** [How to test AI output with evals](/blog/test-ai-output-with-evals) and [AI cost and latency](/blog/ai-cost-and-latency), which covers the Message Batches API.
+- **Build:** the guide's Exercise 3, an extraction pipeline. Define a JSON schema with required, optional and nullable fields, and check that the model returns `null` when a field isn't in the document instead of inventing a value. When validation fails, send the error back and retry. Then run a batch of documents through the Message Batches API and handle the failures by `custom_id`.
+
+### Week 6: large codebases, provenance and review
+
+- **Learn:** 5.4 context in large codebase exploration, 5.5 human review and confidence calibration, 5.6 provenance (where each fact came from) and uncertainty.
+- **Course:** re-watch the parts of any course that match your weakest task statements.
+- **Read:** [What is an LLM?](/blog/what-is-an-llm) for how the context window works.
+- **Build:** the guide's Exercise 4, a small research pipeline. A coordinator sends work to two subagents, passes each one the findings it needs in its prompt, and keeps the source of every claim. Simulate one subagent failing and check the coordinator still finishes, and says what's missing.
+- **Review:** the sample questions in the guide, then the checklist below.
+
+
+
+<Callout type="note" title="Some names have moved since the guide">
+
+Claude Code changes fast. The guide calls the subagent tool "Task"; the current [Agent SDK docs](https://code.claude.com/docs/en/agent-sdk/subagents) call it the Agent tool (it still shows as "Task" in one list). The [skills docs](https://code.claude.com/docs/en/skills) say custom commands have been merged into skills, though `.claude/commands/` files keep working. Learn the current docs for your projects, and learn the guide's words for the exam.
+
+</Callout>
+
+
+
+## What if I only have four weeks?
+
+Keep the order and cut the reading, not the building:
+
+| Week | Focus | Exercise |
+| --- | --- | --- |
+| 1 | Domain 1, all of 1.1–1.7 | Start Exercise 1 |
+| 2 | Domains 2 and 3 | Finish Exercise 1, do Exercise 2 |
+| 3 | Domains 4 and 5 | Exercise 3 |
+| 4 | Exercise 4, weak task statements, sample questions | Exercise 4 |
+
+Run `node plan.mjs 4 10` to see the hours per domain for this version.
+
+## Which scenarios can come up?
+
+Each exam question belongs to a **scenario**: a short description of a production system you are working on. You get 4 of the guide's 6 scenarios, picked at random, so prepare for all six. This table lists them with the primary domains the guide gives for each, and the weeks of this plan that cover them.
+
+| Scenario | What you are building | Primary domains | Weeks |
+| --- | --- | --- | --- |
+| Customer support resolution agent | An Agent SDK agent that resolves support requests with MCP tools and knows when to escalate | 1, 2, 5 | 1–2, 6 |
+| Code generation with Claude Code | A team workflow with CLAUDE.md, custom slash commands and plan mode | 3, 5 | 3–4 |
+| Multi-agent research system | A coordinator with search, analysis, synthesis and report subagents | 1, 2, 5 | 1–2, 6 |
+| Developer productivity with Claude | An Agent SDK agent that explores codebases with built-in tools and MCP servers | 2, 3, 1 | 2–3 |
+| Claude Code for continuous integration | Automated reviews, tests and pull request feedback in CI | 3, 4 | 4 |
+| Structured data extraction | Extraction from documents, validated with JSON schemas | 4, 5 | 4–5 |
+
+Notice that domain 5 appears in four of the six scenarios, even though it has the smallest weight. Don't leave it for the last evening.
+
+## How should I use sample questions?
+
+The exam guide includes sample questions with explanations. Use them at the end of week 6, not at the start: they are more useful as a check than as a syllabus. For each one, read the explanation even if you got it right, and note which task statement it tests.
+
+After that, this blog is building more practice material. Look out for:
+
+- **The mock exam**: [Claude certification mock exam: practice questions and exam-day tips](/blog/claude-certification-mock-exam), the last part of this series.
+- **Five prep series, one post per task statement**: "Claude certification prep: agentic architecture", "Claude certification prep: tool design and MCP", "Claude certification prep: Claude Code configuration", "Claude certification prep: prompt engineering and structured output" and "Claude certification prep: context management and reliability".
+
+The questions in those posts are the blog's own practice questions, written from the public task statements. They are not real exam questions.
+
+
+
+<Callout type="warning" title="Don't use leaked exam content">
+
+Before the exam you accept a non-disclosure agreement: the questions, answers and scenarios are confidential. The guide says disclosing exam content can lead to your result being invalidated, your credential being revoked and a ban from future exams. Skip any site that claims to have "real" questions.
+
+</Callout>
+
+
+
+## Am I ready to book or sit the exam?
+
+You're in good shape if you can say yes to most of these:
+
+- I've read the whole exam guide, including the out-of-scope list.
+- For every one of the 30 task statements, I can explain it in two sentences and name one wrong approach.
+- I've built an agentic loop that stops on `stop_reason`, not on a step limit or on what the text says.
+- I've used a hook to enforce a rule, and I can explain when a hook beats a prompt instruction.
+- I've written tool descriptions for two similar tools and returned structured errors from a tool.
+- I've set up `CLAUDE.md`, a path-specific rule, a skill and a project `.mcp.json` in a real repository.
+- I've run Claude Code with `-p` and JSON output, as a CI job would.
+- I've built an extraction step with a JSON schema, nullable fields and a retry on validation errors.
+- I've done all four exercises in the guide, in my own way.
+- I've worked through the guide's sample questions and understood every explanation.
+
+If you fail, the score report shows your percent correct per domain. Use it to pick the weeks of this plan to repeat. The guide sets waiting periods between attempts: 14 days after the first, 30 after the second and 90 after the third.
+
+## What should I do next?
+
+- **Download the exam guide** from the [certification page](https://anthropic-partners.skilljar.com/claude-certified-architect-foundations-certification) and read it tonight.
+- **Run `node plan.mjs`** with your real weeks and hours, and put the study blocks in your calendar.
+- **Start week 1** with [How to build your first AI agent in Node.js](/blog/build-your-first-ai-agent). It runs without an API key, so you can start today.
+- **Read the other parts of this series**: [What Claude certifications are there, and can you take one?](/blog/what-are-claude-certifications) and [Claude Developer vs Architect exam: which should you take?](/blog/which-claude-certification) cover who can take the exams and which one to pick.
