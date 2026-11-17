@@ -14,10 +14,12 @@ const base = import.meta.env.BASE_URL;
 const canonical = `https://inexconnect.com/blog${path}`;
 const pageTitle = title === SITE.name ? `${SITE.name} Blog` : `${title} · ${SITE.name} Blog`;
 
-// Tawk.to — same property as the website; renders nothing until real IDs exist.
-// This layout is used by public pages only; the Keystatic admin has its own UI.
-const tawkPropertyId = import.meta.env.PUBLIC_TAWK_PROPERTY_ID;
-const tawkWidgetId = import.meta.env.PUBLIC_TAWK_WIDGET_ID;
+// Tawk.to — same property as the website (public IDs from the Tawk.to
+// dashboard; PUBLIC_TAWK_* env vars can override). This layout is used by
+// public pages only; the Keystatic admin has its own UI.
+const tawkPropertyId =
+  import.meta.env.PUBLIC_TAWK_PROPERTY_ID ?? "6afcd9c1607ad63ccac4ab1a";
+const tawkWidgetId = import.meta.env.PUBLIC_TAWK_WIDGET_ID ?? "1k7lr56vn";
 
 const web = SITE.url;
 ---
