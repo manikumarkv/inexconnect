@@ -104,4 +104,43 @@ const formatDate = (d: Date) =>
       )}
     </div>
   </article>
+
+  <script>
+    // Render Mermaid flowcharts: swap each mermaid code block for its SVG.
+    const blocks = document.querySelectorAll('pre[data-language="mermaid"]');
+    if (blocks.length > 0) {
+      const { default: mermaid } = await import("mermaid");
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: "base",
+        themeVariables: {
+          primaryColor: "#f7f7f8",
+          primaryBorderColor: "#ff5c50",
+          primaryTextColor: "#232323",
+          secondaryColor: "#ffffff",
+          tertiaryColor: "#ffffff",
+          mainBkg: "#f7f7f8",
+          nodeBorder: "#ff5c50",
+          lineColor: "#5b5b60",
+          textColor: "#232323",
+          clusterBkg: "#ffffff",
+          clusterBorder: "#e4e4e7",
+          fontFamily: "inherit",
+        },
+      });
+      let i = 0;
+      for (const pre of blocks) {
+        const code = pre.querySelector("code")?.textContent ?? "";
+        const wrap = document.createElement("div");
+        wrap.className = "mermaid-figure";
+        try {
+          const { svg } = await mermaid.render(`mmd-${i++}`, code.trim());
+          wrap.innerHTML = svg;
+        } catch {
+          wrap.textContent = code;
+        }
+        pre.replaceWith(wrap);
+      }
+    }
+  </script>
 </BaseLayout>
