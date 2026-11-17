@@ -1,0 +1,60 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostCard from "../../components/PostCard.astro";
+import seriesData from "../../data/series.json";
+
+type Post = CollectionEntry<"posts">;
+
+interface SeriesEntry {
+  slug: string;
+  name: string;
+  description: string;
+}
+interface Props {
+  series: SeriesEntry;
+  posts: Post[];
+}
+
+export async function getStaticPaths() {
+  const now = new Date();
+  const posts = (await getCollection("posts")).filter(
+    (post: Post) => !post.data.draft && post.data.date <= now,
+  );
+  return (seriesData as SeriesEntry[])
+    .map((series) => ({
+      params: { slug: series.slug },
+      props: {
+        series,
+        posts: posts
+          .filter((p: Post) => p.data.series === series.name)
+          .sort((a: Post, b: Post) => (a.data.seriesPart ?? 0) - (b.data.seriesPart ?? 0)),
+      } as Props,
+    }))
+    .filter((x: { props: Props }) => x.props.posts.length > 0);
+}
+
+const { series, posts } = Astro.props as Props;
+---
+
+<BaseLayout title={series.name} description={series.description} path={`/series/${series.slug}`}>
+  <section class="bg-charcoal text-white">
+    <div class="wrap py-16 sm:py-20">
+      <p class="eyebrow">Series</p>
+      <h1 class="mt-4 max-w-2xl text-4xl font-extrabold tracking-tight">{series.name}</h1>
+      {series.description && <p class="mt-5 max-w-2xl leading-relaxed text-white/75">{series.description}</p>}
+      <p class="mt-3 text-sm text-white/60">{posts.length} part{posts.length === 1 ? "" : "s"}, in order</p>
+    </div>
+  </section>
+
+  <section class="py-16 sm:py-20">
+    <div class="wrap">
+      <div class="grid gap-6 md:grid-cols-2">
+        {posts.map((post: Post) => <PostCard post={post} base="../" />)}
+      </div>
+      <p class="mt-10">
+        <a href="../" class="font-semibold text-charcoal underline decoration-coral decoration-2 underline-offset-4 hover:text-coral">← All posts</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>

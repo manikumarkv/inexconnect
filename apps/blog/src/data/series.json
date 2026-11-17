@@ -1,0 +1,67 @@
+[
+  {
+    "slug": "agents",
+    "name": "AI agents",
+    "description": "What agents are, how they relate to MCP and LangChain, and how to build, test and deploy your first one in Node.js."
+  },
+  {
+    "slug": "cert-agentic-architecture",
+    "name": "Claude certification prep: agentic architecture",
+    "description": "Agentic loops, multi-agent orchestration, subagents, workflow gates, hooks, task decomposition and sessions, mapped to Domain 1 of the Claude Certified Architect exam."
+  },
+  {
+    "slug": "cert-claude-code",
+    "name": "Claude certification prep: Claude Code configuration",
+    "description": "CLAUDE.md hierarchy, slash commands and skills, path-specific rules, plan mode, iterative refinement and CI/CD, mapped to Domain 3 of the Claude Certified Architect exam."
+  },
+  {
+    "slug": "cert-context-reliability",
+    "name": "Claude certification prep: context management and reliability",
+    "description": "Long conversations, escalation, error propagation, large codebases, human review and provenance, mapped to Domain 5 of the Claude Certified Architect exam."
+  },
+  {
+    "slug": "cert-prompt-engineering",
+    "name": "Claude certification prep: prompt engineering and structured output",
+    "description": "Explicit criteria, few-shot prompting, JSON schemas, validation-retry loops, batch processing and multi-pass review, mapped to Domain 4 of the Claude Certified Architect exam."
+  },
+  {
+    "slug": "cert-tool-design-mcp",
+    "name": "Claude certification prep: tool design and MCP",
+    "description": "Tool descriptions, structured errors, tool distribution and tool_choice, MCP server integration and Claude Code's built-in tools, mapped to Domain 2 of the Claude Certified Architect exam."
+  },
+  {
+    "slug": "claude-certification",
+    "name": "Claude certification",
+    "description": "Which Claude certifications exist and who can take one, how to prepare for the Claude Certified Architect exam, and a mock exam to test yourself."
+  },
+  {
+    "slug": "foundations",
+    "name": "AI foundations for developers",
+    "description": "Call an LLM from your code, write prompts that work, use AI coding assistants safely, and let models call your functions."
+  },
+  {
+    "slug": "jev",
+    "name": "Jev and decision models",
+    "description": "What TypeSafe AI's Jev is, how a decision model differs from an LLM, when to use it, and how to try it on Vercel AI Gateway."
+  },
+  {
+    "slug": "mcp",
+    "name": "Build with MCP",
+    "description": "Go from zero to a working MCP server. Build it, test it, publish it, and decide where MCP fits in your own app."
+  },
+  {
+    "slug": "models",
+    "name": "Models and fine-tuning",
+    "description": "Fine-tune a small model, publish it on Hugging Face, run models on your own machine, and know when to fine-tune at all."
+  },
+  {
+    "slug": "production",
+    "name": "AI in production",
+    "description": "Ship AI features you can trust. Test answers with evals, defend against prompt injection, and control cost and latency."
+  },
+  {
+    "slug": "rag",
+    "name": "RAG",
+    "description": "Let a model answer from your own documents. Learn RAG and embeddings, then build a working RAG app."
+  }
+]

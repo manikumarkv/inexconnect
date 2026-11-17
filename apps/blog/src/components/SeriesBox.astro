@@ -1,0 +1,43 @@
+---
+interface Part {
+  id: string;
+  title: string;
+}
+interface Props {
+  name: string;
+  seriesHref: string;
+  parts: Part[];
+  currentId: string;
+}
+const { name, seriesHref, parts, currentId } = Astro.props as Props;
+const index = parts.findIndex((p: Part) => p.id === currentId);
+const progress = Math.round(((index + 1) / parts.length) * 100);
+---
+
+<section class="my-6 rounded-[20px] border border-line bg-white p-6" aria-labelledby="series-h">
+  <div class="flex flex-wrap items-baseline justify-between gap-2">
+    <span class="eyebrow">Series · Part {index + 1} of {parts.length}</span>
+    <a id="series-h" href={seriesHref} class="font-semibold text-charcoal hover:text-coral">{name} →</a>
+  </div>
+  <div class="mt-3 h-[3px] rounded bg-line" aria-hidden="true">
+    <i class="block h-full rounded bg-coral" style={`width:${progress}%`}></i>
+  </div>
+  <ol class="mt-3 grid gap-0.5">
+    {parts.map((p: Part, i: number) => (
+      <li>
+        {p.id === currentId ? (
+          <span class="flex items-center gap-3 rounded-lg bg-mist px-2 py-1.5 text-[15px] font-semibold text-charcoal" aria-current="page">
+            <span class="min-w-[1.5em] text-sm text-coral">{i + 1}</span>
+            <span>{p.title}</span>
+            <span class="ml-auto text-[11px] font-medium tracking-wide text-coral uppercase">You are here</span>
+          </span>
+        ) : (
+          <a href={`./${p.id}`} class="flex items-center gap-3 rounded-lg px-2 py-1.5 text-[15px] text-slate hover:bg-mist hover:text-charcoal">
+            <span class="min-w-[1.5em] text-sm">{i + 1}</span>
+            <span>{p.title}</span>
+          </a>
+        )}
+      </li>
+    ))}
+  </ol>
+</section>

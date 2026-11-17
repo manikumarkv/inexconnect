@@ -1,0 +1,65 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostCard from "../../components/PostCard.astro";
+
+type Post = CollectionEntry<"posts">;
+type Author = CollectionEntry<"authors">;
+
+interface Props {
+  author: Author;
+  posts: Post[];
+}
+
+export async function getStaticPaths() {
+  const now = new Date();
+  const authors = await getCollection("authors");
+  const posts = (await getCollection("posts"))
+    .filter((post: Post) => !post.data.draft && post.data.date <= now)
+    .sort((a: Post, b: Post) => b.data.date.getTime() - a.data.date.getTime());
+  return authors.map((author: Author) => ({
+    params: { slug: author.id },
+    props: {
+      author,
+      posts: posts.filter((p: Post) => p.data.author?.id === author.id),
+    } as Props,
+  }));
+}
+
+const { author, posts } = Astro.props as Props;
+const initials = author.data.name
+  .split(/\s+/)
+  .map((w: string) => w[0])
+  .join("")
+  .slice(0, 2)
+  .toUpperCase();
+---
+
+<BaseLayout title={author.data.name} description={author.data.bio} path={`/authors/${author.id}`}>
+  <section class="bg-charcoal text-white">
+    <div class="wrap py-16 sm:py-20">
+      <div class="flex items-center gap-4">
+        <span class="flex h-16 w-16 items-center justify-center rounded-full bg-coral text-xl font-extrabold text-white" aria-hidden="true">
+          {initials}
+        </span>
+        <div>
+          <p class="eyebrow">Author</p>
+          <h1 class="mt-1 text-4xl font-extrabold tracking-tight">{author.data.name}</h1>
+          {author.data.role && <p class="mt-1 text-white/70">{author.data.role}</p>}
+        </div>
+      </div>
+      {author.data.bio && <p class="mt-6 max-w-2xl leading-relaxed text-white/75">{author.data.bio}</p>}
+    </div>
+  </section>
+
+  <section class="py-16 sm:py-20">
+    <div class="wrap">
+      <div class="grid gap-6 md:grid-cols-2">
+        {posts.map((post: Post) => <PostCard post={post} base="../" />)}
+      </div>
+      <p class="mt-10">
+        <a href="../" class="font-semibold text-charcoal underline decoration-coral decoration-2 underline-offset-4 hover:text-coral">← All posts</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>

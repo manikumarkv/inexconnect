@@ -1,0 +1,29 @@
+---
+interface Props {
+  name: string;
+  role?: string;
+  bio?: string;
+  href: string;
+}
+const { name, role, bio, href } = Astro.props as Props;
+const initials = name
+  .split(/\s+/)
+  .map((w: string) => w[0])
+  .join("")
+  .slice(0, 2)
+  .toUpperCase();
+---
+
+<section class="flex gap-4 rounded-[20px] border border-line bg-white p-6" aria-label={`About ${name}`}>
+  <span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-charcoal text-lg font-extrabold text-white" aria-hidden="true">
+    {initials}
+  </span>
+  <div>
+    <p class="text-xs font-semibold tracking-widest text-slate uppercase">Written by</p>
+    <p class="mt-1 text-lg font-bold">
+      <a href={href} class="hover:text-coral">{name}</a>
+      {role && <span class="ml-2 text-sm font-medium text-slate">{role}</span>}
+    </p>
+    {bio && <p class="mt-2 leading-relaxed text-slate">{bio}</p>}
+  </div>
+</section>
