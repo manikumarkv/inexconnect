@@ -241,7 +241,7 @@ $ npx @modelcontextprotocol/inspector node build/index.js
 
 It prints a local URL with a one-time token. Open it and switch the server on. Then open **Tools**, pick a tool, fill in the form and select **Execute Tool**.
 
-![The Inspector Tools tab with add_todo selected, its text field described as "What needs to be done", and the Protocol panel showing the initialize and tools/list messages](/images/posts/inspector-tools-tab.png)
+![The Inspector Tools tab with add_todo selected, its text field described as "What needs to be done", and the Protocol panel showing the initialize and tools/list messages](/blog/images/posts/inspector-tools-tab.png)
 
 Three places matter when you debug:
 
@@ -249,7 +249,7 @@ Three places matter when you debug:
 - **Protocol** is the list of JSON-RPC messages: every request, response and notification, with timings. If a call hangs, you see which request never got an answer.
 - **Console** shows your server's stderr. Every `console.error` line lands here.
 
-![The Inspector Server Console panel showing the log line "project-todos MCP server running on stdio (file: /root/.project-todos.json)"](/images/posts/inspector-server-console.png)
+![The Inspector Server Console panel showing the log line "project-todos MCP server running on stdio (file: /root/.project-todos.json)"](/blog/images/posts/inspector-server-console.png)
 
 The log line above prints which file the server uses. One line like that at startup answers "is it reading the file I think it is?" before you start guessing.
 

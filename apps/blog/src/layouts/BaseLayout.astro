@@ -10,6 +10,7 @@ interface Props {
 }
 
 const { title, description = SITE.description, path = "" } = Astro.props;
+const base = import.meta.env.BASE_URL;
 const canonical = `https://inexconnect.com/blog${path}`;
 const pageTitle = title === SITE.name ? `${SITE.name} Blog` : `${title} · ${SITE.name} Blog`;
 
@@ -29,7 +30,7 @@ const web = SITE.url;
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href={`${base}favicon.ico`} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={SITE.name} />
     <meta property="og:title" content={pageTitle} />
@@ -43,7 +44,7 @@ const web = SITE.url;
     <header class="sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur">
       <div class="wrap flex h-[72px] items-center justify-between gap-4">
         <a href={web} class="flex items-center gap-2.5" aria-label="iNexConnect home">
-          <img src="/icon.svg" alt="" width="38" height="38" />
+          <img src={`${base}icon.svg`} alt="" width="38" height="38" />
           <span class="text-[1.35rem] font-extrabold tracking-tight text-charcoal">iNexConnect</span>
         </a>
         <nav class="flex items-center gap-6" aria-label="Primary">
@@ -62,7 +63,7 @@ const web = SITE.url;
     <footer class="bg-charcoal text-white">
       <div class="wrap flex flex-wrap items-center justify-between gap-4 py-10">
         <div>
-          <img src="/logo-dark.svg" alt="iNexConnect" width="170" height="40" />
+          <img src={`${base}logo-dark.svg`} alt="iNexConnect" width="170" height="40" />
           <p class="mt-3 text-sm text-white/60">{SITE.tagline}</p>
         </div>
         <div class="text-sm text-white/70">
