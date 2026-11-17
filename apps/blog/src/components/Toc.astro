@@ -1,0 +1,64 @@
+---
+export interface TocItem {
+  id: string;
+  label: string;
+  level?: 2 | 3;
+}
+interface Props {
+  items: TocItem[];
+  title?: string;
+}
+const { items, title = "On this page" } = Astro.props as Props;
+---
+
+<nav class="toc" aria-label={title} data-toc>
+  <p class="eyebrow">{title}</p>
+  <ol class="mt-3 space-y-1">
+    {items.map((it: TocItem) => (
+      <li class={it.level === 3 ? "pl-4" : ""}>
+        <a
+          href={`#${it.id}`}
+          class="block border-l-2 border-line py-1 pl-3 text-sm text-slate transition-colors hover:text-coral"
+        >
+          {it.label}
+        </a>
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<script>
+  // Highlight the section currently in view (active item gets the coral rule).
+  const toc = document.querySelector<HTMLElement>("[data-toc]");
+  if (toc) {
+    const links = [...toc.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')];
+    const targets = links
+      .map((a) => document.getElementById(decodeURIComponent(a.hash.slice(1))))
+      .filter((el): el is HTMLElement => !!el);
+    const setActive = (id: string) =>
+      links.forEach((a) =>
+        a.hash.slice(1) === id
+          ? a.setAttribute("aria-current", "true")
+          : a.removeAttribute("aria-current"),
+      );
+    const visible = new Set<string>();
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries)
+          e.isIntersecting ? visible.add(e.target.id) : visible.delete(e.target.id);
+        const first = targets.find((t) => visible.has(t.id));
+        if (first) setActive(first.id);
+      },
+      { rootMargin: "-88px 0px -60% 0px" },
+    );
+    targets.forEach((t) => io.observe(t));
+  }
+</script>
+
+<style>
+  .toc a[aria-current="true"] {
+    color: #ff5c50;
+    border-left-color: #ff5c50;
+    font-weight: 600;
+  }
+</style>

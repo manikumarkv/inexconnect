@@ -1,0 +1,42 @@
+---
+interface Part {
+  id: string;
+  title: string;
+}
+interface Props {
+  name: string;
+  seriesHref: string;
+  parts: Part[];
+  currentId: string;
+}
+const { name, seriesHref, parts, currentId } = Astro.props as Props;
+const i = parts.findIndex((p: Part) => p.id === currentId);
+const prev = parts[i - 1];
+const next = parts[i + 1];
+---
+
+<nav aria-label="Series navigation">
+  <p class="mb-3 text-sm text-slate">
+    Part {i + 1} of {parts.length} in <a href={seriesHref} class="font-semibold text-charcoal underline decoration-coral decoration-2 underline-offset-4 hover:text-coral">{name}</a>
+    {!next && <span> · You finished the series.</span>}
+  </p>
+  <div class="grid gap-4 sm:grid-cols-2">
+    {prev ? (
+      <a href={`./${prev.id}`} rel="prev" class="flex flex-col gap-1 rounded-[20px] border border-line bg-white p-4 hover:border-charcoal/40">
+        <span class="text-xs font-semibold tracking-widest text-slate uppercase">← Part {i}</span>
+        <span class="font-semibold">{prev.title}</span>
+      </a>
+    ) : <span class="hidden sm:block" />}
+    {next ? (
+      <a href={`./${next.id}`} rel="next" class="flex flex-col items-end gap-1 rounded-[20px] border border-line bg-white p-4 text-right hover:border-charcoal/40">
+        <span class="text-xs font-semibold tracking-widest text-coral uppercase">Part {i + 2} →</span>
+        <span class="font-semibold">{next.title}</span>
+      </a>
+    ) : (
+      <a href={seriesHref} class="flex flex-col items-end gap-1 rounded-[20px] border border-line bg-white p-4 text-right hover:border-charcoal/40">
+        <span class="text-xs font-semibold tracking-widest text-coral uppercase">Series →</span>
+        <span class="font-semibold">Back to {name}</span>
+      </a>
+    )}
+  </div>
+</nav>

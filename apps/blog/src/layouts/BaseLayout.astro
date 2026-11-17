@@ -37,6 +37,7 @@ const web = SITE.url;
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={`${web}/og-image.png`} />
     <link rel="alternate" type="application/rss+xml" title="iNexConnect Blog" href="https://inexconnect.com/blog/rss.xml" />
+    <slot name="head" />
   </head>
   <body class="flex min-h-screen flex-col bg-white text-charcoal">
     <header class="sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur">

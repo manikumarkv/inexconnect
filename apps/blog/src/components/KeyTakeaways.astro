@@ -1,0 +1,15 @@
+---
+interface Props {
+  items: string[];
+}
+const { items } = Astro.props as Props;
+---
+
+{items.length > 0 && (
+  <section class="mb-8 rounded-[20px] border border-line border-l-4 border-l-coral bg-mist p-6" aria-labelledby="tldr-h">
+    <h2 id="tldr-h" class="eyebrow">Key takeaways</h2>
+    <ul class="mt-3 list-disc space-y-1.5 pl-5 leading-relaxed text-slate marker:text-coral">
+      {items.map((t: string) => <li>{t}</li>)}
+    </ul>
+  </section>
+)}

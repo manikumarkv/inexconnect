@@ -1,0 +1,51 @@
+---
+interface Props {
+  url: string;
+  title: string;
+}
+const { url, title } = Astro.props as Props;
+const u = encodeURIComponent(url);
+const t = encodeURIComponent(title);
+const links = [
+  { label: "X", href: `https://x.com/intent/post?url=${u}&text=${t}` },
+  { label: "LinkedIn", href: `https://www.linkedin.com/sharing/share-offsite/?url=${u}` },
+  { label: "Reddit", href: `https://www.reddit.com/submit?url=${u}&title=${t}` },
+  { label: "Hacker News", href: `https://news.ycombinator.com/submitlink?u=${u}&t=${t}` },
+];
+---
+
+<div class="flex items-center gap-2" data-share>
+  <span class="text-sm font-medium text-slate">Share</span>
+  {links.map((l: { label: string; href: string }) => (
+    <a
+      href={l.href}
+      target="_blank"
+      rel="noopener"
+      class="rounded-full border border-line px-3 py-1.5 text-sm font-medium text-charcoal hover:border-coral hover:text-coral"
+    >
+      {l.label}
+    </a>
+  ))}
+  <button
+    type="button"
+    data-copy={url}
+    class="rounded-full border border-line px-3 py-1.5 text-sm font-medium text-charcoal hover:border-coral hover:text-coral"
+  >
+    Copy link
+  </button>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>("[data-copy]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(btn.dataset.copy ?? "");
+        const old = btn.textContent;
+        btn.textContent = "Copied";
+        setTimeout(() => (btn.textContent = old), 1600);
+      } catch {
+        /* clipboard unavailable */
+      }
+    });
+  });
+</script>

@@ -1,0 +1,28 @@
+---
+interface NavPost {
+  id: string;
+  title: string;
+}
+interface Props {
+  newer?: NavPost;
+  older?: NavPost;
+}
+const { newer, older } = Astro.props as Props;
+---
+
+{(newer || older) && (
+  <nav class="grid gap-4 sm:grid-cols-2" aria-label="More posts">
+    {older ? (
+      <a href={`./${older.id}`} rel="prev" class="flex flex-col gap-1 rounded-[20px] border border-line bg-white p-4 hover:border-charcoal/40">
+        <span class="text-xs font-semibold tracking-widest text-coral uppercase">← Older</span>
+        <span class="font-semibold">{older.title}</span>
+      </a>
+    ) : <span class="hidden sm:block" />}
+    {newer ? (
+      <a href={`./${newer.id}`} rel="next" class="flex flex-col items-end gap-1 rounded-[20px] border border-line bg-white p-4 text-right hover:border-charcoal/40">
+        <span class="text-xs font-semibold tracking-widest text-coral uppercase">Newer →</span>
+        <span class="font-semibold">{newer.title}</span>
+      </a>
+    ) : <span class="hidden sm:block" />}
+  </nav>
+)}

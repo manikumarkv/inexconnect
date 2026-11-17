@@ -1,0 +1,30 @@
+---
+// Mirrors the DevRunway blog: hidden until a provider form action is configured.
+// Set PUBLIC_NEWSLETTER_ACTION (and optionally PUBLIC_NEWSLETTER_FIELD, default
+// "email") in the environment to turn the signup on.
+const action = import.meta.env.PUBLIC_NEWSLETTER_ACTION as string | undefined;
+const field = (import.meta.env.PUBLIC_NEWSLETTER_FIELD as string | undefined) ?? "email";
+const ready = !!action;
+---
+
+{ready && (
+  <section class="grid gap-4 rounded-[20px] border border-line bg-white p-6" aria-labelledby="nl-h">
+    <div>
+      <h2 id="nl-h" class="text-xl font-bold">Get new posts by email</h2>
+      <p class="mt-1 text-slate">New posts on AI tooling, MCP and shipping software — no spam, unsubscribe anytime.</p>
+    </div>
+    <form action={action} method="post" target="_blank" class="flex flex-wrap gap-3">
+      <label class="sr-only" for="nl-email">Email address</label>
+      <input
+        id="nl-email"
+        type="email"
+        name={field}
+        required
+        placeholder="you@example.com"
+        autocomplete="email"
+        class="min-w-56 flex-1 rounded-full border border-line px-5 py-3 focus:border-coral focus:outline-none"
+      />
+      <button type="submit" class="btn-primary">Subscribe</button>
+    </form>
+  </section>
+)}
