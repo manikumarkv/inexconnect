@@ -1,6 +1,6 @@
 // @ts-check
 import { defineConfig } from "astro/config";
-import vercel from "@astrojs/vercel";
+import cloudflare from "@astrojs/cloudflare";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import keystatic from "@keystatic/astro";
@@ -15,7 +15,7 @@ import tailwindcss from "@tailwindcss/vite";
  */
 export default defineConfig({
   site: "https://inexconnect.com/blog",
-  adapter: vercel(),
+  adapter: cloudflare(),
   integrations: [react(), keystatic(), sitemap()],
   vite: {
     plugins: [tailwindcss()],
