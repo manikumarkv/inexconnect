@@ -24,6 +24,15 @@ const posts = defineCollection({
     tags: z.array(reference("tags")).default([]),
     seoTitle: z.string().optional(),
     seoDescription: z.string().optional(),
+    category: z.string().optional(),
+    series: z.string().optional(),
+    seriesPart: z.number().optional(),
+    featured: z.boolean().default(false),
+    showToc: z.boolean().default(false),
+    tldr: z.array(z.string()).default([]),
+    faq: z
+      .array(z.object({ question: z.string(), answer: z.string() }))
+      .default([]),
   }),
 });
 

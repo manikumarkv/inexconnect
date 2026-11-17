@@ -1,6 +1,9 @@
 ---
 import { getCollection, render, type CollectionEntry } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Callout from "../components/Callout.astro";
+import Steps from "../components/Steps.astro";
+import Step from "../components/Step.astro";
 
 interface Props {
   post: CollectionEntry<"posts">;
@@ -19,7 +22,15 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props as Props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+const toc: Heading[] = post.data.showToc
+  ? headings.filter((h: Heading) => h.depth === 2)
+  : [];
 const title = post.data.headline ?? post.data.title;
 const description = post.data.seoDescription ?? post.data.summary;
 const formatDate = (d: Date) =>
@@ -34,15 +45,54 @@ const formatDate = (d: Date) =>
         <span class="mx-2">·</span>
         {formatDate(post.data.date)}
         {post.data.updated && <span> · Updated {formatDate(post.data.updated)}</span>}
+        {post.data.category && <span> · {post.data.category}</span>}
       </p>
+      {post.data.series && (
+        <p class="mt-3 inline-block rounded-full bg-mist px-4 py-1.5 text-sm font-medium text-charcoal">
+          {post.data.series} series{post.data.seriesPart ? ` · Part ${post.data.seriesPart}` : ""}
+        </p>
+      )}
       <h1 class="mt-4 text-4xl font-extrabold tracking-tight">{title}</h1>
       {post.data.summary && <p class="mt-4 text-lg leading-relaxed text-slate">{post.data.summary}</p>}
       {post.data.coverImage && (
         <img src={post.data.coverImage} alt={post.data.coverAlt ?? ""} class="mt-8 w-full rounded-[20px]" />
       )}
+      {post.data.tldr.length > 0 && (
+        <aside class="mt-8 rounded-[20px] border border-line border-t-4 border-t-coral bg-mist p-6">
+          <p class="eyebrow">TL;DR</p>
+          <ul class="mt-3 list-disc space-y-2 pl-5 leading-relaxed text-slate">
+            {post.data.tldr.map((point: string) => <li>{point}</li>)}
+          </ul>
+        </aside>
+      )}
+      {toc.length > 2 && (
+        <nav class="mt-8 rounded-[20px] border border-line p-6" aria-label="Table of contents">
+          <p class="font-bold">On this page</p>
+          <ul class="mt-3 space-y-1.5">
+            {toc.map((h: Heading) => (
+              <li>
+                <a href={`#${h.slug}`} class="text-slate underline decoration-coral decoration-2 underline-offset-4 hover:text-coral">{h.text}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )}
       <div class="post-body mt-8">
-        <Content />
+        <Content components={{ Callout, Steps, Step }} />
       </div>
+      {post.data.faq.length > 0 && (
+        <section class="mt-12">
+          <h2 class="text-2xl font-extrabold tracking-tight">Frequently asked questions</h2>
+          <div class="mt-5 space-y-4">
+            {post.data.faq.map((item: { question: string; answer: string }) => (
+              <div class="rounded-[20px] border border-line bg-white p-6">
+                <h3 class="font-bold">{item.question}</h3>
+                <p class="mt-2 leading-relaxed text-slate">{item.answer}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
       {post.data.tags.length > 0 && (
         <p class="mt-10 flex flex-wrap gap-2">
           {post.data.tags.map((tag: { id: string }) => (
