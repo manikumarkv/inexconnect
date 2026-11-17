@@ -1,35 +1,37 @@
-# Deploying iNexConnect (Cloudflare Pages)
+# Deploying iNexConnect (Cloudflare Workers)
 
-Two Pages projects, both connected to this GitHub repo. Branch model:
+Two Workers, both built from this GitHub repo (Workers Builds).
+The current adapters target Workers, not Pages: OpenNext (web) and the
+Astro Cloudflare adapter (blog) both emit a Worker bundle.
 
-- **`release/1`** → production deployment
-- **`main`** → dev (branch preview) deployment
-- Any other branch → its own preview deployment
+Branch model:
 
-## Project: inexconnect-web (apps/web, Next.js + OpenNext)
+- **`release/1`** → production
+- **`main`** → dev
+
+Set each Worker's production branch to `release/1` under
+Settings → Builds → Branch control after creating it.
+
+## Worker: inexconnect-web (apps/web, Next.js + OpenNext)
 
 | Setting | Value |
 |---|---|
-| Production branch | `release/1` |
-| Root directory | *(repo root — leave blank)* |
 | Build command | `pnpm --filter @inexconnect/web run build:cf` |
-| Build output directory | `apps/web/.open-next` |
-| Environment variable | `NODE_VERSION` = `24` |
+| Deploy command | `npx wrangler deploy --config apps/web/wrangler.jsonc` |
+| Production branch | `release/1` |
 
-## Project: inexconnect-blog (apps/blog, Astro + Keystatic)
+## Worker: inexconnect-blog (apps/blog, Astro + Keystatic)
 
 | Setting | Value |
 |---|---|
-| Production branch | `release/1` |
-| Root directory | *(repo root — leave blank)* |
 | Build command | `pnpm --filter @inexconnect/blog run build` |
-| Build output directory | `apps/blog/dist` |
-| Environment variable | `NODE_VERSION` = `24` |
+| Deploy command | `npx wrangler deploy --config apps/blog/dist/server/wrangler.json` |
+| Production branch | `release/1` |
 
 ## Notes
 
-- Pushes deploy automatically: `release/1` to production, everything else
-  to a preview URL (`<branch>.<project>.pages.dev`).
+- URLs are `<worker-name>.<account-subdomain>.workers.dev` once the
+  account's workers.dev subdomain is registered.
 - The blog's Keystatic admin runs in local mode; on Cloudflare it cannot
   save edits (no filesystem). GitHub mode comes at launch.
 - Custom domains (inexconnect.com, blog.inexconnect.com) attach later —

@@ -24,7 +24,7 @@
   "scripts": {
     "build": "next build",
     "build:cf": "opennextjs-cloudflare build",
-    "deploy:cf": "opennextjs-cloudflare build && wrangler pages deploy",
+    "deploy:cf": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "dev": "next dev",
     "lint": "prettier --check \"app/**/*.{ts,tsx,css}\" \"components/**/*.tsx\" \"content/**/*.ts\" \"*.ts\" \"*.mjs\"",
     "start": "next start",

@@ -1,8 +1,12 @@
 {
-  // Cloudflare Pages deployment for the website (OpenNext adapter).
-  // Production branch: release/1 · Dev previews: main
+  // Cloudflare Workers deployment for the website (OpenNext adapter).
+  // Production: inexconnect-web · Dev: inexconnect-web-dev (deployed with --name)
   "name": "inexconnect-web",
+  "main": ".open-next/worker.js",
   "compatibility_date": "2026-01-15",
   "compatibility_flags": ["nodejs_compat"],
-  "pages_build_output_dir": ".open-next"
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  }
 }
