@@ -1,0 +1,84 @@
+---
+import "../styles/global.css";
+import { CHAT_SPEC, SITE } from "@inexconnect/ui";
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Public path of this page under inexconnect.com/blog, e.g. "/my-post" or "" for the index. */
+  path?: string;
+}
+
+const { title, description = SITE.description, path = "" } = Astro.props;
+const canonical = `https://inexconnect.com/blog${path}`;
+const pageTitle = title === SITE.name ? `${SITE.name} Blog` : `${title} · ${SITE.name} Blog`;
+
+// Tawk.to — same property as the website; renders nothing until real IDs exist.
+// This layout is used by public pages only; the Keystatic admin has its own UI.
+const tawkPropertyId = import.meta.env.PUBLIC_TAWK_PROPERTY_ID;
+const tawkWidgetId = import.meta.env.PUBLIC_TAWK_WIDGET_ID;
+
+const web = SITE.url;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.ico" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={`${web}/og-image.png`} />
+    <link rel="alternate" type="application/rss+xml" title="iNexConnect Blog" href="https://inexconnect.com/blog/rss.xml" />
+  </head>
+  <body class="flex min-h-screen flex-col bg-white text-charcoal">
+    <header class="sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur">
+      <div class="wrap flex h-[72px] items-center justify-between gap-4">
+        <a href={web} class="flex items-center gap-2.5" aria-label="iNexConnect home">
+          <img src="/icon.svg" alt="" width="38" height="38" />
+          <span class="text-[1.35rem] font-extrabold tracking-tight text-charcoal">iNexConnect</span>
+        </a>
+        <nav class="flex items-center gap-6" aria-label="Primary">
+          <a href={`${web}/services`} class="hidden text-[0.95rem] font-medium text-charcoal/80 hover:text-coral sm:inline">Services</a>
+          <a href={`${web}/builds`} class="hidden text-[0.95rem] font-medium text-charcoal/80 hover:text-coral sm:inline">Builds</a>
+          <a href="./" class="text-[0.95rem] font-semibold text-coral">Blog</a>
+          <a href={`${web}/request-a-quote`} class="btn-primary !px-5 !py-2.5 text-sm">Request a Quote</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="flex-1">
+      <slot />
+    </main>
+
+    <footer class="bg-charcoal text-white">
+      <div class="wrap flex flex-wrap items-center justify-between gap-4 py-10">
+        <div>
+          <img src="/logo-dark.svg" alt="iNexConnect" width="170" height="40" />
+          <p class="mt-3 text-sm text-white/60">{SITE.tagline}</p>
+        </div>
+        <div class="text-sm text-white/70">
+          <a href={`mailto:${SITE.email}`} class="font-semibold text-white underline decoration-coral decoration-2 underline-offset-4 hover:text-coral">{SITE.email}</a>
+          <p class="mt-2">Live chat: {CHAT_SPEC.offlineNote}</p>
+        </div>
+      </div>
+    </footer>
+
+    {tawkPropertyId && tawkWidgetId && (
+      <script
+        is:inline
+        async
+        src={`https://embed.tawk.to/${tawkPropertyId}/${tawkWidgetId}`}
+        charset="UTF-8"
+        crossorigin="*"
+      />
+    )}
+  </body>
+</html>

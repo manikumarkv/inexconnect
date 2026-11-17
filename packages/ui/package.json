@@ -1,0 +1,13 @@
+{
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "name": "@inexconnect/ui",
+  "private": true,
+  "scripts": {
+    "lint": "node -e \"console.log('ui: no lint rules yet')\"",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "type": "module",
+  "version": "0.1.0"
+}

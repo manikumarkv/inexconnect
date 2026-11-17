@@ -1,0 +1,55 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import settings from "../content/settings/blog.json";
+
+type Post = CollectionEntry<"posts">;
+
+const now = new Date();
+const posts: Post[] = (await getCollection("posts"))
+  .filter((post: Post) => !post.data.draft && post.data.date <= now)
+  .sort((a: Post, b: Post) => b.data.date.getTime() - a.data.date.getTime());
+
+const formatDate = (d: Date) =>
+  d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+---
+
+<BaseLayout title="Blog" description={settings.intro} path="">
+  <section class="bg-charcoal text-white">
+    <div class="wrap py-16 sm:py-20">
+      <p class="eyebrow">Blog</p>
+      <h1 class="mt-4 max-w-2xl text-4xl font-extrabold tracking-tight">{settings.headline}</h1>
+      <p class="mt-5 max-w-2xl leading-relaxed text-white/75">{settings.intro}</p>
+    </div>
+  </section>
+
+  <section class="py-16 sm:py-20">
+    <div class="wrap">
+      {posts.length === 0 ? (
+        <div class="mx-auto max-w-xl rounded-[20px] border border-line bg-mist p-10 text-center">
+          <h2 class="text-2xl font-extrabold">No posts yet</h2>
+          <p class="mt-3 leading-relaxed text-slate">
+            We're writing. The first posts are on their way — check back soon, or
+            head over to the main site in the meantime.
+          </p>
+          <a href="https://inexconnect.com" class="btn-primary mt-6">Visit inexconnect.com</a>
+        </div>
+      ) : (
+        <div class="grid gap-6 md:grid-cols-2">
+          {posts.map((post) => (
+            <article class="flex flex-col rounded-[20px] border border-line border-t-4 border-t-coral bg-white p-7 shadow-[0_10px_30px_rgb(35_35_35/0.06)]">
+              <p class="text-sm text-slate">{formatDate(post.data.date)}</p>
+              <h2 class="mt-2 text-2xl font-bold">
+                <a href={`./${post.id}`} class="hover:text-coral">{post.data.headline ?? post.data.title}</a>
+              </h2>
+              {post.data.summary && <p class="mt-3 flex-1 leading-relaxed text-slate">{post.data.summary}</p>}
+              <a href={`./${post.id}`} class="mt-5 font-semibold text-charcoal underline decoration-coral decoration-2 underline-offset-4 hover:text-coral">
+                Read post →
+              </a>
+            </article>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>

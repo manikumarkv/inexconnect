@@ -1,0 +1,10 @@
+{
+  "exports": {
+    "./tsconfig/base.json": "./tsconfig/base.json",
+    "./tsconfig/nextjs.json": "./tsconfig/nextjs.json"
+  },
+  "name": "@inexconnect/config",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0"
+}

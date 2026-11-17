@@ -1,0 +1,23 @@
+{
+  "description": "iNexConnect — Next.js marketing website + Astro/Keystatic blog in one monorepo.",
+  "devDependencies": {
+    "prettier": "^3.10.1",
+    "turbo": "^2.11.11",
+    "typescript": "^7.0.2"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "name": "inexconnect",
+  "packageManager": "pnpm@12.21.0",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "dev": "turbo run dev",
+    "format": "prettier --write \"**/*.{ts,tsx,js,mjs,json,md,css}\" --ignore-path .gitignore",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck"
+  },
+  "version": "0.1.0"
+}

@@ -1,0 +1,53 @@
+/* iNexConnect locked brand tokens — Tailwind v4 CSS-first theme.
+   Single source of truth for both apps. Do not redefine these in an app. */
+@theme {
+  --color-charcoal: #232323;
+  --color-coral: #ff5c50;
+  --color-ink: #232323;
+  --color-slate: #5b5b60;
+  --color-mist: #f7f7f8;
+  --color-line: #e7e7ea;
+  --color-white: #ffffff;
+
+  --font-sans: "Inter", "Helvetica Neue", Helvetica, Arial, ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 20px;
+  --shadow-card: 0 10px 30px rgb(35 35 35 / 0.08);
+}
+
+:root {
+  --brand-charcoal: #232323;
+  --brand-coral: #ff5c50;
+  --brand-slate: #5b5b60;
+  --brand-mist: #f7f7f8;
+  --brand-line: #e7e7ea;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #ffffff;
+  color: #232323;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: #ff5c50;
+  color: #ffffff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,104 @@
+@import "tailwindcss";
+@import "@inexconnect/brand/theme.css";
+
+/* Shared building blocks (kept framework-thin; layout lives in utilities). */
+.wrap {
+  width: min(1120px, 100% - 2.5rem);
+  margin-inline: auto;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: #ff5c50;
+  color: #ffffff;
+  font-weight: 700;
+  padding: 0.8rem 1.6rem;
+  border-radius: 999px;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease;
+}
+.btn-primary:hover {
+  background: #f04a40;
+  transform: translateY(-1px);
+}
+
+.btn-outline-light {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 2px solid #ffffff;
+  color: #ffffff;
+  font-weight: 700;
+  padding: 0.8rem 1.6rem;
+  border-radius: 999px;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+.btn-outline-light:hover {
+  background: #ffffff;
+  color: #232323;
+}
+
+.btn-outline-dark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 2px solid #232323;
+  color: #232323;
+  font-weight: 700;
+  padding: 0.8rem 1.6rem;
+  border-radius: 999px;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+.btn-outline-dark:hover {
+  background: #232323;
+  color: #ffffff;
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #e7e7ea;
+  border-top: 4px solid #ff5c50;
+  border-radius: 20px;
+  padding: 1.75rem;
+  box-shadow: 0 10px 30px rgb(35 35 35 / 0.06);
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #ff5c50;
+}
+
+.field {
+  width: 100%;
+  border: 1px solid #d9d9de;
+  border-radius: 12px;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.95rem;
+  background: #ffffff;
+  color: #232323;
+}
+.field:focus {
+  outline: 2px solid #ff5c50;
+  outline-offset: 1px;
+  border-color: transparent;
+}
+
+.label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}

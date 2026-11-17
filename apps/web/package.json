@@ -1,0 +1,30 @@
+{
+  "dependencies": {
+    "@inexconnect/brand": "workspace:*",
+    "@inexconnect/ui": "workspace:*",
+    "next": "^16.4.6",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@inexconnect/config": "workspace:*",
+    "@tailwindcss/postcss": "^4.3.5",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "prettier": "^3.10.1",
+    "tailwindcss": "^4.3.5",
+    "typescript": "^7.0.2"
+  },
+  "name": "@inexconnect/web",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "lint": "prettier --check \"app/**/*.{ts,tsx,css}\" \"components/**/*.tsx\" \"content/**/*.ts\" \"*.ts\" \"*.mjs\"",
+    "start": "next start",
+    "typecheck": "tsc --noEmit"
+  },
+  "version": "0.1.0"
+}

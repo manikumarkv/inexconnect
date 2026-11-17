@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "allowJs": true,
+    "incremental": true,
+    "jsx": "preserve",
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "module": "ESNext",
+    "noEmit": true,
+    "plugins": [{ "name": "next" }]
+  },
+  "display": "iNexConnect Next.js",
+  "extends": "./base.json"
+}

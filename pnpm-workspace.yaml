@@ -1,0 +1,6 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+minimumReleaseAgeExclude:
+  - "@keystar/ui@0.10.1"
+  - "@keystatic/core@0.6.10"

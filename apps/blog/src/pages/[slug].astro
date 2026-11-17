@@ -1,0 +1,57 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+interface Props {
+  post: CollectionEntry<"posts">;
+}
+
+export async function getStaticPaths() {
+  type Post = CollectionEntry<"posts">;
+  const now = new Date();
+  const posts = await getCollection("posts");
+  return posts
+    .filter((post: Post) => !post.data.draft && post.data.date <= now)
+    .map((post: Post) => ({
+      params: { slug: post.id },
+      props: { post },
+    }));
+}
+
+const { post } = Astro.props as Props;
+const { Content } = await render(post);
+const title = post.data.headline ?? post.data.title;
+const description = post.data.seoDescription ?? post.data.summary;
+const formatDate = (d: Date) =>
+  d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+---
+
+<BaseLayout title={post.data.seoTitle ?? title} description={description} path={`/${post.id}`}>
+  <article class="py-14 sm:py-16">
+    <div class="wrap max-w-3xl">
+      <p class="text-sm text-slate">
+        <a href="./" class="font-semibold text-charcoal underline decoration-coral decoration-2 underline-offset-4 hover:text-coral">← All posts</a>
+        <span class="mx-2">·</span>
+        {formatDate(post.data.date)}
+        {post.data.updated && <span> · Updated {formatDate(post.data.updated)}</span>}
+      </p>
+      <h1 class="mt-4 text-4xl font-extrabold tracking-tight">{title}</h1>
+      {post.data.summary && <p class="mt-4 text-lg leading-relaxed text-slate">{post.data.summary}</p>}
+      {post.data.coverImage && (
+        <img src={post.data.coverImage} alt={post.data.coverAlt ?? ""} class="mt-8 w-full rounded-[20px]" />
+      )}
+      <div class="post-body mt-8">
+        <Content />
+      </div>
+      {post.data.tags.length > 0 && (
+        <p class="mt-10 flex flex-wrap gap-2">
+          {post.data.tags.map((tag: { id: string }) => (
+            <a href={`./tags/${tag.id}`} class="rounded-full bg-mist px-4 py-1.5 text-sm font-medium text-charcoal hover:text-coral">
+              {tag.id}
+            </a>
+          ))}
+        </p>
+      )}
+    </div>
+  </article>
+</BaseLayout>

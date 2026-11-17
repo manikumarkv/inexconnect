@@ -1,0 +1,18 @@
+{
+  "exports": {
+    ".": "./src/index.ts",
+    "./assets/*": "./assets/*",
+    "./theme.css": "./src/theme.css"
+  },
+  "name": "@inexconnect/brand",
+  "private": true,
+  "scripts": {
+    "lint": "node -e \"console.log('brand: no lint rules yet')\"",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "type": "module",
+  "version": "0.1.0"
+}
