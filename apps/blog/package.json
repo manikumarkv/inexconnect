@@ -3,7 +3,7 @@
     "@astrojs/react": "^7.1.9",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.5",
-    "@astrojs/vercel": "^11.0.22",
+    "@astrojs/cloudflare": "^14.4.8",
     "@inexconnect/brand": "workspace:*",
     "@inexconnect/ui": "workspace:*",
     "@keystatic/astro": "^6.0.0",

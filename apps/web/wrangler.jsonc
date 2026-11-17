@@ -1,0 +1,8 @@
+{
+  // Cloudflare Pages deployment for the website (OpenNext adapter).
+  // Production branch: release/1 · Dev previews: main
+  "name": "inexconnect-web",
+  "compatibility_date": "2026-01-15",
+  "compatibility_flags": ["nodejs_compat"],
+  "pages_build_output_dir": ".open-next"
+}

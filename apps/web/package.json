@@ -2,6 +2,7 @@
   "dependencies": {
     "@inexconnect/brand": "workspace:*",
     "@inexconnect/ui": "workspace:*",
+    "@opennextjs/cloudflare": "^1.20.17",
     "next": "^16.4.6",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
@@ -15,12 +16,15 @@
     "@types/react-dom": "^19.3.0",
     "prettier": "^3.10.1",
     "tailwindcss": "^4.3.5",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "wrangler": "^4.164.0"
   },
   "name": "@inexconnect/web",
   "private": true,
   "scripts": {
     "build": "next build",
+    "build:cf": "opennextjs-cloudflare build",
+    "deploy:cf": "opennextjs-cloudflare build && wrangler pages deploy",
     "dev": "next dev",
     "lint": "prettier --check \"app/**/*.{ts,tsx,css}\" \"components/**/*.tsx\" \"content/**/*.ts\" \"*.ts\" \"*.mjs\"",
     "start": "next start",
