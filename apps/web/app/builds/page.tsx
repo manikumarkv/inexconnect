@@ -35,6 +35,14 @@ export default function BuildsPage() {
               </p>
               <h2 className="mt-2 text-2xl font-bold">{build.name}</h2>
               <p className="mt-3 flex-1 leading-relaxed text-slate">{build.description}</p>
+              {build.mcpSlug && (
+                <Link
+                  href={`/mcps/${build.mcpSlug}`}
+                  className="mt-5 font-semibold text-coral underline decoration-coral decoration-2 underline-offset-4 hover:text-charcoal"
+                >
+                  Try it & add it →
+                </Link>
+              )}
               <a
                 href={build.href}
                 target="_blank"
