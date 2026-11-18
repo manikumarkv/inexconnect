@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { mcpServers } from "@/content/mcps";
 import { services } from "@/content/site";
 import { SITE } from "@inexconnect/ui";
 
@@ -7,6 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "",
     "/services",
     "/builds",
+    "/mcps",
     "/about",
     "/request-a-quote",
     "/book",
@@ -20,6 +22,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
     ...services.map((service) => ({
       url: `${SITE.url}/services/${service.slug}`,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
+    ...mcpServers.map((mcp) => ({
+      url: `${SITE.url}/mcps/${mcp.slug}`,
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),

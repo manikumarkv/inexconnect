@@ -26,6 +26,7 @@ export const WEB_NAV_LINKS: NavLink[] = [
   { label: "Services", href: "/services" },
   { label: "AI", href: "/#ai" },
   { label: "Builds", href: "/builds" },
+  { label: "MCPs", href: "/mcps" },
   { label: "About", href: "/about" },
   { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/contact" },
