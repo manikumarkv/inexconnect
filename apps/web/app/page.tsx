@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { Section, SectionHeading } from "@/components/Section";
 import QuoteForm from "@/components/QuoteForm";
 import { aiOfferings, builds, processSteps, services } from "@/content/site";
@@ -7,6 +8,10 @@ import { SITE } from "@inexconnect/ui";
 const coreServices = services.filter((s) =>
   ["mobile-apps", "web-apps", "consulting"].includes(s.slug),
 );
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 export default function HomePage() {
   return (

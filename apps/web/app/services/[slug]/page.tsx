@@ -16,7 +16,11 @@ export async function generateMetadata({
   const { slug } = await params;
   const service = services.find((s) => s.slug === slug);
   if (!service) return {};
-  return { title: service.title, description: service.short };
+  return {
+    title: service.title,
+    description: service.short,
+    alternates: { canonical: `/services/${slug}` },
+  };
 }
 
 export default async function ServiceDetailPage({ params }: { params: Promise<{ slug: string }> }) {

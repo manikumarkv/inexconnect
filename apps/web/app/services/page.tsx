@@ -4,6 +4,7 @@ import { Section, SectionHeading } from "@/components/Section";
 import { services } from "@/content/site";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/services" },
   title: "Services",
   description:
     "Mobile apps, web apps & websites, software consulting, AI integration, and MCP servers, skills & AI agents from iNexConnect.",
