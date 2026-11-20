@@ -4,6 +4,7 @@ import { Section, SectionHeading } from "@/components/Section";
 import { processSteps } from "@/content/site";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/about" },
   title: "About",
   description:
     "iNexConnect is a small software studio: mobile apps, web apps, and AI tooling — built with the latest AI tools, led by humans.",

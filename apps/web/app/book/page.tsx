@@ -4,6 +4,7 @@ import { Section, SectionHeading } from "@/components/Section";
 import { SITE } from "@inexconnect/ui";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/book" },
   title: "Book a Discovery Call",
   description: "Book a short discovery call with iNexConnect to talk through your project idea.",
 };

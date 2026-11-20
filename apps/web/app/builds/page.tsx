@@ -4,6 +4,7 @@ import { Section, SectionHeading } from "@/components/Section";
 import { builds } from "@/content/site";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/builds" },
   title: "Builds",
   description:
     "Open-source and in-house builds from iNexConnect — DevRunway, Gnanodayam, TrueIcon MCP, and ImageRight MCP. Our own projects, not client engagements.",

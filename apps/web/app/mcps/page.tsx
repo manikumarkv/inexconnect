@@ -4,6 +4,7 @@ import { Section } from "@/components/Section";
 import { mcpServers } from "@/content/mcps";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/mcps" },
   title: "MCP Servers",
   description:
     "Open-source MCP servers built by iNexConnect — TrueIcon (icon search for AI coding assistants) and ImageRight MCP (version-aware ImageRight access). See what they do, try example calls, and add them to your AI tool.",
