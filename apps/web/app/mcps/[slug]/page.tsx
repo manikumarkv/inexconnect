@@ -17,7 +17,11 @@ export async function generateMetadata({
   const { slug } = await params;
   const mcp = mcpServers.find((m) => m.slug === slug);
   if (!mcp) return {};
-  return { title: mcp.name, description: mcp.tagline };
+  return {
+    title: mcp.name,
+    description: mcp.tagline,
+    alternates: { canonical: `/mcps/${slug}` },
+  };
 }
 
 export default async function McpDetailPage({ params }: { params: Promise<{ slug: string }> }) {

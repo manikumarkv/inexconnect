@@ -5,6 +5,7 @@ import QuoteForm from "@/components/QuoteForm";
 import { SITE } from "@inexconnect/ui";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/request-a-quote" },
   title: "Request a Quote",
   description:
     "Tell iNexConnect about your project and get a written quote. We reply within one business day.",

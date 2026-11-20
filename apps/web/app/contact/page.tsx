@@ -4,6 +4,7 @@ import { Section, SectionHeading } from "@/components/Section";
 import { CHAT_SPEC, SITE } from "@inexconnect/ui";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/contact" },
   title: "Contact",
   description: `Contact iNexConnect at ${SITE.email}. We reply within one business day.`,
 };
