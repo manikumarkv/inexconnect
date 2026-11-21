@@ -1,3 +1,4 @@
+import { SITE } from "@inexconnect/ui";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -202,10 +203,10 @@ export default async function McpDetailPage({ params }: { params: Promise<{ slug
               The code, design notes, and progress live on GitHub — and if your team runs
               ImageRight and wants early access, email{" "}
               <a
-                href="mailto:inexconnect@gmail.com"
+                href={`mailto:${SITE.email}`}
                 className="font-semibold text-charcoal underline decoration-coral decoration-2 underline-offset-4 hover:text-coral"
               >
-                inexconnect@gmail.com
+                {SITE.email}
               </a>
               .
             </p>
