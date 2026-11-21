@@ -8,7 +8,7 @@ import { SITE } from "@inexconnect/ui";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default: `${SITE.name} — ${SITE.tagline}`,
+    default: SITE.homeTitle,
     template: `%s · ${SITE.name}`,
   },
   description: SITE.description,
@@ -25,13 +25,13 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: SITE.name,
-    title: `${SITE.name} — ${SITE.tagline}`,
+    title: SITE.homeTitle,
     description: SITE.description,
     images: [{ url: "/og-image.png", width: 1200, height: 630, alt: SITE.name }],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE.name} — ${SITE.tagline}`,
+    title: SITE.homeTitle,
     description: SITE.description,
     images: ["/og-image.png"],
   },
