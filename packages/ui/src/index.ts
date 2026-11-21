@@ -52,7 +52,7 @@ export const SITE = {
   areaServed: "Dallas–Fort Worth, Texas",
   /** Official brand profiles; feeds Organization `sameAs` structured data. */
   profiles: SOCIAL_LINKS.map((link) => link.href),
-  email: "inexconnect@gmail.com",
+  email: "hello@inexconnect.com",
   url: "https://inexconnect.com",
   blogUrl: "https://inexconnect.com/blog",
   blogOrigin: "https://blog.inexconnect.com",

@@ -2,7 +2,7 @@
 export const brand = {
   name: "iNexConnect",
   tagline: "Idea • Build • Grow",
-  email: "inexconnect@gmail.com",
+  email: "hello@inexconnect.com",
   colors: {
     charcoal: "#232323",
     coral: "#FF5C50",
