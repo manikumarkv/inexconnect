@@ -7,7 +7,18 @@
 
 export const SITE = {
   name: "iNexConnect",
+  legalName: "iNexConnect LLC",
   tagline: "Idea • Build • Grow",
+  /** Homepage <title>: brand + legal suffix + what we do + where, for search results. */
+  homeTitle: "iNexConnect LLC — AI-Powered App & Web Development | Dallas–Fort Worth",
+  areaServed: "Dallas–Fort Worth, Texas",
+  /** Official brand profiles; feeds Organization `sameAs` structured data. */
+  profiles: [
+    "https://www.linkedin.com/company/inexconnect",
+    "https://github.com/iNexConnect-LLC",
+    "https://www.youtube.com/@inexconnect",
+    "https://x.com/inexconnect",
+  ],
   email: "inexconnect@gmail.com",
   url: "https://inexconnect.com",
   blogUrl: "https://inexconnect.com/blog",

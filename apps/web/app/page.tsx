@@ -4,6 +4,7 @@ import { Section, SectionHeading } from "@/components/Section";
 import QuoteForm from "@/components/QuoteForm";
 import { aiOfferings, builds, processSteps, services } from "@/content/site";
 import { SITE } from "@inexconnect/ui";
+import OrganizationJsonLd from "@/components/OrganizationJsonLd";
 
 const coreServices = services.filter((s) =>
   ["mobile-apps", "web-apps", "consulting"].includes(s.slug),
@@ -16,6 +17,7 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
+      <OrganizationJsonLd />
       {/* Hero — charcoal, no logo here (header carries the brand). */}
       <section className="bg-charcoal text-white">
         <div className="wrap py-20 sm:py-24">
