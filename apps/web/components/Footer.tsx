@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CHAT_SPEC, SITE, SOCIAL_LINKS, WEB_NAV_LINKS } from "@inexconnect/ui";
+import { SITE, SOCIAL_LINKS, WEB_NAV_LINKS } from "@inexconnect/ui";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -63,9 +63,6 @@ export default function Footer() {
           >
             {SITE.email}
           </a>
-          <p className="mt-3 text-sm leading-relaxed text-white/70">
-            Live chat (bottom-right, when we are online): {CHAT_SPEC.offlineNote}
-          </p>
         </div>
       </div>
 
