@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CHAT_SPEC, SITE, WEB_NAV_LINKS } from "@inexconnect/ui";
+import { CHAT_SPEC, SITE, SOCIAL_LINKS, WEB_NAV_LINKS } from "@inexconnect/ui";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -14,6 +14,24 @@ export default function Footer() {
             {SITE.tagline}. Mobile apps, web apps & websites — built with the latest AI tools, led
             by humans.
           </p>
+          <ul className="mt-5 flex gap-3" aria-label="iNexConnect on social media">
+            {SOCIAL_LINKS.map((social) => (
+              <li key={social.href}>
+                <a
+                  href={social.href}
+                  target="_blank"
+                  rel="me noopener noreferrer"
+                  aria-label={`iNexConnect on ${social.label}`}
+                  title={social.label}
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white/80 transition-colors hover:bg-coral hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-coral"
+                >
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+                    <path d={social.iconPath} />
+                  </svg>
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
 
         <nav aria-label="Footer">
