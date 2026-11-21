@@ -1,6 +1,6 @@
 ---
 import "../styles/global.css";
-import { CHAT_SPEC, SITE, SOCIAL_LINKS } from "@inexconnect/ui";
+import { SITE, SOCIAL_LINKS } from "@inexconnect/ui";
 
 interface Props {
   title: string;
@@ -91,9 +91,7 @@ const web = SITE.url;
           </ul>
         </div>
         <div class="text-sm text-white/70">
-          <a href={`mailto:${SITE.email}`} class="font-semibold text-white underline decoration-coral decoration-2 underline-offset-4 hover:text-coral">{SITE.email}</a>
-          <p class="mt-2">Live chat: {CHAT_SPEC.offlineNote}</p>
-        </div>
+          <a href={`mailto:${SITE.email}`} class="font-semibold text-white underline decoration-coral decoration-2 underline-offset-4 hover:text-coral">{SITE.email}</a>        </div>
       </div>
     </footer>
 
