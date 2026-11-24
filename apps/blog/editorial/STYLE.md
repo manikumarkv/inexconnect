@@ -58,19 +58,28 @@ Length: What is ≈ 1,700–2,500 words · How-to ≈ 2,500–4,000 · Deep dive
 
 ## Components (the only ones allowed)
 
+<!-- prettier-ignore -->
 ```mdx
 <Callout type="warning" title="Only connect servers you trust">
-  Text.
+
+Text, with a blank line after the opening tag so Markdown renders.
+
 </Callout>
 
 <Steps>
-  <Step title="Add the server">Text and code.</Step>
+
+<Step title="Add the server">
+
+Text and code.
+
+</Step>
+
 </Steps>
 ```
 
 Callout types: `note`, `tip`, `warning` (most used: security, cost, gotchas).
-Diagrams: ` ```mermaid ` code blocks. Code blocks always have a language
-and must run as written; prefer TypeScript and the official SDKs.
+Diagrams: fenced code blocks tagged `mermaid`. Code blocks always have a
+language and must run as written; prefer TypeScript and the official SDKs.
 
 ## Links
 
