@@ -1,0 +1,15 @@
+{
+  "name": "@inexconnect/social",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Turns published blog posts into ready-to-post drafts for LinkedIn, X, Instagram and YouTube, plus a posting calendar.",
+  "scripts": {
+    "generate": "node src/generate.mjs",
+    "lint": "node -e \"console.log('social: no lint rules yet')\""
+  },
+  "dependencies": {
+    "@inexconnect/ui": "workspace:*",
+    "yaml": "^2.8.3"
+  }
+}

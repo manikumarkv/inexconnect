@@ -17,7 +17,8 @@
     "dev": "turbo run dev",
     "format": "prettier --write \"**/*.{ts,tsx,js,mjs,json,md,css}\" --ignore-path .gitignore",
     "lint": "turbo run lint",
-    "typecheck": "turbo run typecheck"
+    "typecheck": "turbo run typecheck",
+    "social": "pnpm --filter @inexconnect/social generate"
   },
   "version": "0.1.0"
 }

@@ -1,0 +1,69 @@
+date,day,platform,post,draft,status
+2026-11-30,Mon,LinkedIn,"What is MCP? The Model Context Protocol, explained for developers",drafts/what-is-mcp/linkedin.md,todo
+2026-11-30,Mon,X,"What is MCP? The Model Context Protocol, explained for developers",drafts/what-is-mcp/x-thread.md,todo
+2026-12-01,Tue,Instagram,"What is MCP? The Model Context Protocol, explained for developers",drafts/what-is-mcp/instagram.md,todo
+2026-12-02,Wed,YouTube Short,"What is MCP? The Model Context Protocol, explained for developers",drafts/what-is-mcp/youtube-short.md,todo
+2026-12-03,Thu,LinkedIn,"The developer's roadmap to AI: what to learn, and in what order",drafts/ai-roadmap-for-developers/linkedin.md,todo
+2026-12-03,Thu,X,"The developer's roadmap to AI: what to learn, and in what order",drafts/ai-roadmap-for-developers/x-thread.md,todo
+2026-12-04,Fri,Instagram,"The developer's roadmap to AI: what to learn, and in what order",drafts/ai-roadmap-for-developers/instagram.md,todo
+2026-12-05,Sat,YouTube Short,"The developer's roadmap to AI: what to learn, and in what order",drafts/ai-roadmap-for-developers/youtube-short.md,todo
+2026-12-07,Mon,LinkedIn,"What is an LLM? Large language models, explained for developers",drafts/what-is-an-llm/linkedin.md,todo
+2026-12-07,Mon,X,"What is an LLM? Large language models, explained for developers",drafts/what-is-an-llm/x-thread.md,todo
+2026-12-08,Tue,Instagram,"What is an LLM? Large language models, explained for developers",drafts/what-is-an-llm/instagram.md,todo
+2026-12-09,Wed,YouTube Short,"What is an LLM? Large language models, explained for developers",drafts/what-is-an-llm/youtube-short.md,todo
+2026-12-10,Thu,LinkedIn,"What adding MCP to an existing application gets you",drafts/add-mcp-to-existing-app/linkedin.md,todo
+2026-12-10,Thu,X,"What adding MCP to an existing application gets you",drafts/add-mcp-to-existing-app/x-thread.md,todo
+2026-12-11,Fri,Instagram,"What adding MCP to an existing application gets you",drafts/add-mcp-to-existing-app/instagram.md,todo
+2026-12-12,Sat,YouTube Short,"What adding MCP to an existing application gets you",drafts/add-mcp-to-existing-app/youtube-short.md,todo
+2026-12-13,Sun,YouTube,"The developer's roadmap to AI: what to learn, and in what order",drafts/ai-roadmap-for-developers/youtube-long.md,todo
+2026-12-14,Mon,LinkedIn,"AI agents vs MCP: what's the difference and how they fit together",drafts/ai-agents-vs-mcp/linkedin.md,todo
+2026-12-14,Mon,X,"AI agents vs MCP: what's the difference and how they fit together",drafts/ai-agents-vs-mcp/x-thread.md,todo
+2026-12-15,Tue,Instagram,"AI agents vs MCP: what's the difference and how they fit together",drafts/ai-agents-vs-mcp/instagram.md,todo
+2026-12-16,Wed,YouTube Short,"AI agents vs MCP: what's the difference and how they fit together",drafts/ai-agents-vs-mcp/youtube-short.md,todo
+2026-12-17,Thu,LinkedIn,"Getting the most out of AI coding assistants",drafts/ai-coding-assistants-tips/linkedin.md,todo
+2026-12-17,Thu,X,"Getting the most out of AI coding assistants",drafts/ai-coding-assistants-tips/x-thread.md,todo
+2026-12-18,Fri,Instagram,"Getting the most out of AI coding assistants",drafts/ai-coding-assistants-tips/instagram.md,todo
+2026-12-19,Sat,YouTube Short,"Getting the most out of AI coding assistants",drafts/ai-coding-assistants-tips/youtube-short.md,todo
+2026-12-21,Mon,LinkedIn,"AI cost and latency: what drives them and how to cut them",drafts/ai-cost-and-latency/linkedin.md,todo
+2026-12-21,Mon,X,"AI cost and latency: what drives them and how to cut them",drafts/ai-cost-and-latency/x-thread.md,todo
+2026-12-22,Tue,Instagram,"AI cost and latency: what drives them and how to cut them",drafts/ai-cost-and-latency/instagram.md,todo
+2026-12-23,Wed,YouTube Short,"AI cost and latency: what drives them and how to cut them",drafts/ai-cost-and-latency/youtube-short.md,todo
+2026-12-24,Thu,LinkedIn,"How to build your own blog with Astro and Keystatic",drafts/build-a-blog-with-astro-and-keystatic/linkedin.md,todo
+2026-12-24,Thu,X,"How to build your own blog with Astro and Keystatic",drafts/build-a-blog-with-astro-and-keystatic/x-thread.md,todo
+2026-12-25,Fri,Instagram,"How to build your own blog with Astro and Keystatic",drafts/build-a-blog-with-astro-and-keystatic/instagram.md,todo
+2026-12-26,Sat,YouTube Short,"How to build your own blog with Astro and Keystatic",drafts/build-a-blog-with-astro-and-keystatic/youtube-short.md,todo
+2026-12-27,Sun,YouTube,"What adding MCP to an existing application gets you",drafts/add-mcp-to-existing-app/youtube-long.md,todo
+2026-12-28,Mon,LinkedIn,"How to build your first AI agent in Node.js",drafts/build-your-first-ai-agent/linkedin.md,todo
+2026-12-28,Mon,X,"How to build your first AI agent in Node.js",drafts/build-your-first-ai-agent/x-thread.md,todo
+2026-12-29,Tue,Instagram,"How to build your first AI agent in Node.js",drafts/build-your-first-ai-agent/instagram.md,todo
+2026-12-30,Wed,YouTube Short,"How to build your first AI agent in Node.js",drafts/build-your-first-ai-agent/youtube-short.md,todo
+2026-12-31,Thu,LinkedIn,"How to build your first MCP server in TypeScript",drafts/build-your-first-mcp-server/linkedin.md,todo
+2026-12-31,Thu,X,"How to build your first MCP server in TypeScript",drafts/build-your-first-mcp-server/x-thread.md,todo
+2027-01-01,Fri,Instagram,"How to build your first MCP server in TypeScript",drafts/build-your-first-mcp-server/instagram.md,todo
+2027-01-02,Sat,YouTube Short,"How to build your first MCP server in TypeScript",drafts/build-your-first-mcp-server/youtube-short.md,todo
+2027-01-04,Mon,LinkedIn,"How to build your first RAG app",drafts/build-your-first-rag-app/linkedin.md,todo
+2027-01-04,Mon,X,"How to build your first RAG app",drafts/build-your-first-rag-app/x-thread.md,todo
+2027-01-05,Tue,Instagram,"How to build your first RAG app",drafts/build-your-first-rag-app/instagram.md,todo
+2027-01-06,Wed,YouTube Short,"How to build your first RAG app",drafts/build-your-first-rag-app/youtube-short.md,todo
+2027-01-07,Thu,LinkedIn,"How to fine-tune your first model",drafts/fine-tune-your-first-model/linkedin.md,todo
+2027-01-07,Thu,X,"How to fine-tune your first model",drafts/fine-tune-your-first-model/x-thread.md,todo
+2027-01-08,Fri,Instagram,"How to fine-tune your first model",drafts/fine-tune-your-first-model/instagram.md,todo
+2027-01-09,Sat,YouTube Short,"How to fine-tune your first model",drafts/fine-tune-your-first-model/youtube-short.md,todo
+2027-01-10,Sun,YouTube,"AI agents vs MCP: what's the difference and how they fit together",drafts/ai-agents-vs-mcp/youtube-long.md,todo
+2027-01-11,Mon,LinkedIn,"Your first LLM API call: talk to Claude from your own code",drafts/first-llm-api-call/linkedin.md,todo
+2027-01-11,Mon,X,"Your first LLM API call: talk to Claude from your own code",drafts/first-llm-api-call/x-thread.md,todo
+2027-01-12,Tue,Instagram,"Your first LLM API call: talk to Claude from your own code",drafts/first-llm-api-call/instagram.md,todo
+2027-01-13,Wed,YouTube Short,"Your first LLM API call: talk to Claude from your own code",drafts/first-llm-api-call/youtube-short.md,todo
+2027-01-14,Thu,LinkedIn,"Prompt injection and AI security: what developers need to know",drafts/prompt-injection-ai-security/linkedin.md,todo
+2027-01-14,Thu,X,"Prompt injection and AI security: what developers need to know",drafts/prompt-injection-ai-security/x-thread.md,todo
+2027-01-15,Fri,Instagram,"Prompt injection and AI security: what developers need to know",drafts/prompt-injection-ai-security/instagram.md,todo
+2027-01-16,Sat,YouTube Short,"Prompt injection and AI security: what developers need to know",drafts/prompt-injection-ai-security/youtube-short.md,todo
+2027-01-18,Mon,LinkedIn,"How to publish your MCP server and use it in AI tools",drafts/publish-mcp-server/linkedin.md,todo
+2027-01-18,Mon,X,"How to publish your MCP server and use it in AI tools",drafts/publish-mcp-server/x-thread.md,todo
+2027-01-19,Tue,Instagram,"How to publish your MCP server and use it in AI tools",drafts/publish-mcp-server/instagram.md,todo
+2027-01-20,Wed,YouTube Short,"How to publish your MCP server and use it in AI tools",drafts/publish-mcp-server/youtube-short.md,todo
+2027-01-21,Thu,LinkedIn,"How to publish your fine-tuned model on Hugging Face",drafts/publish-model-on-hugging-face/linkedin.md,todo
+2027-01-21,Thu,X,"How to publish your fine-tuned model on Hugging Face",drafts/publish-model-on-hugging-face/x-thread.md,todo
+2027-01-22,Fri,Instagram,"How to publish your fine-tuned model on Hugging Face",drafts/publish-model-on-hugging-face/instagram.md,todo
+2027-01-23,Sat,YouTube Short,"How to publish your fine-tuned model on Hugging Face",drafts/publish-model-on-hugging-face/youtube-short.md,todo
+2027-01-24,Sun,YouTube,"Getting the most out of AI coding assistants",drafts/ai-coding-assistants-tips/youtube-long.md,todo
