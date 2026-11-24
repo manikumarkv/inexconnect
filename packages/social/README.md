@@ -1,16 +1,46 @@
 # Social content pipeline
 
-Turns published blog posts into ready-to-post drafts for **LinkedIn, X,
-Instagram and YouTube**, plus a posting calendar. Posting stays manual: you
-review each draft, tweak it, and post it yourself.
+Turns published blog posts into ready-to-post content for **LinkedIn, X,
+Instagram and YouTube** — copy, carousel images, Short videos, long-form
+scripts and thumbnails — plus a posting calendar. Posting stays manual.
 
-## Weekly routine (~1 hour)
+## How it works
 
-1. Open `calendar.csv` and filter to this week.
-2. For each row, open the draft file, edit the wording, and post it.
-3. Change the row's `status` from `todo` to `posted`.
-4. Instagram and YouTube need visuals: design the carousel in the brand
-   template, record the Short (see `YOUTUBE_PLAN.md`).
+Agents do all the marketing work. **You only post.**
+
+```text
+/marketing-week
+  1. marketing-strategist  → picks the week's posts, angles, CTAs (drafts/_weeks/<monday>.md)
+  2. social-copywriter     → LinkedIn, X thread, Instagram caption + carousel.json   ┐ in parallel,
+     video-producer        → Short script + short.mp4, long-form script + thumbnail  ┘ per post
+  3. visual-designer       → renders carousel PNGs, checks every image
+  4. brand-reviewer        → fact/voice/limit checks, marks rows `ready`,
+                             writes drafts/_weeks/<monday>-POSTING.md
+```
+
+Agents live in `.claude/agents/`, the orchestrator in
+`.claude/skills/marketing-week/`. Voice rules: `BRAND_VOICE.md`.
+
+## Your weekly routine (~20 min)
+
+1. In Claude Code, run `/marketing-week` (or `/marketing-week 2026-11-30`).
+2. Open `drafts/_weeks/<monday>-POSTING.md` and post each item on its day.
+3. Set the row's `status` to `posted` in `calendar.csv`.
+4. Optional: once a month, drop platform analytics exports into `analytics/`
+   — the strategist uses them to pick better angles.
+
+Status flow: `todo` → `ready` (agents) → `posted` (you).
+
+## Render visuals by hand
+
+```bash
+node packages/social/src/render.mjs carousel  <slug>   # carousel.json  → instagram/slide-N.png
+node packages/social/src/render.mjs thumbnail <slug>   # thumbnail.json → youtube/thumbnail.png
+node packages/social/src/render.mjs short     <slug>   # short.json     → youtube/short.mp4
+```
+
+Needs Playwright (Chromium) and `ffmpeg`. Shorts render silent; add trending
+audio in the YouTube app, or set `"voiceover": "voiceover.mp3"` in `short.json`.
 
 ## Generate the next batch
 
@@ -37,7 +67,7 @@ drafts are never overwritten. `--force` regenerates everything from scratch
 | Sat |                                            | YouTube Short       |
 | Sun | Long-form YouTube video, every second week |
 
-## What each draft contains
+## What each template draft contains (agents then rewrite them)
 
 - `linkedin.md` — hook, summary, key takeaways, one FAQ, link, 5 hashtags.
 - `x-thread.md` — thread with a character count per post (links count as 23).

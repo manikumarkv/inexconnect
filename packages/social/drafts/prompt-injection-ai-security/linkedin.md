@@ -1,5 +1,6 @@
 <!-- LinkedIn · scheduled 2027-01-14 · source: apps/blog/src/content/posts/prompt-injection-ai-security.mdx -->
 <!-- Review, edit, then post by hand. Mark it posted in calendar.csv. -->
+
 Prompt injection and AI security: what developers need to know
 
 Prompt injection is the top risk for AI apps. Learn how it works, why models can't simply ignore it, and the layers of defence that limit the damage.

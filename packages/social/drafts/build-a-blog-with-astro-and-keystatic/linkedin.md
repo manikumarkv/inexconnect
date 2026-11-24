@@ -1,5 +1,6 @@
 <!-- LinkedIn · scheduled 2026-12-24 · source: apps/blog/src/content/posts/build-a-blog-with-astro-and-keystatic.mdx -->
 <!-- Review, edit, then post by hand. Mark it posted in calendar.csv. -->
+
 How to build your own blog with Astro and Keystatic
 
 Get a blog with a friendly writing screen, where every post is a file in git. No database, no paid CMS. Here is how this blog works, and a small one to build.

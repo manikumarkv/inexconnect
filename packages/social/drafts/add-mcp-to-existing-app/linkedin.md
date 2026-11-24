@@ -1,5 +1,6 @@
 <!-- LinkedIn · scheduled 2026-12-10 · source: apps/blog/src/content/posts/add-mcp-to-existing-app.mdx -->
 <!-- Review, edit, then post by hand. Mark it posted in calendar.csv. -->
+
 What adding MCP to an existing application gets you
 
 What a team with an existing app or API gains from an MCP server, what to expose, how to design it, and the security and maintenance costs.

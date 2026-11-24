@@ -1,5 +1,6 @@
 <!-- LinkedIn · scheduled 2027-01-11 · source: apps/blog/src/content/posts/first-llm-api-call.mdx -->
 <!-- Review, edit, then post by hand. Mark it posted in calendar.csv. -->
+
 Your first LLM API call: talk to Claude from your own code
 
 Get an API key, keep it out of git, and call Claude from Node.js or curl. Then read the response, add a system prompt, stream, and fix common errors.

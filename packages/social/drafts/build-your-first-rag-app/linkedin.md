@@ -1,5 +1,6 @@
 <!-- LinkedIn · scheduled 2027-01-04 · source: apps/blog/src/content/posts/build-your-first-rag-app.mdx -->
 <!-- Review, edit, then post by hand. Mark it posted in calendar.csv. -->
+
 How to build your first RAG app
 
 Build a small Node.js app that answers questions from your Markdown notes: chunk, embed locally, retrieve the best matches and ask Claude with sources.

@@ -1,5 +1,6 @@
 <!-- LinkedIn · scheduled 2026-11-30 · source: apps/blog/src/content/posts/what-is-mcp.mdx -->
 <!-- Review, edit, then post by hand. Mark it posted in calendar.csv. -->
+
 What is MCP? Here's the short answer.
 
 MCP is the standard way to plug AI assistants into your tools and data. See how it works, where to find servers, and connect your first one in minutes.

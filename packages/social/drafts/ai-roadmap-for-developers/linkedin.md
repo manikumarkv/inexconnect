@@ -1,5 +1,6 @@
 <!-- LinkedIn · scheduled 2026-12-03 · source: apps/blog/src/content/posts/ai-roadmap-for-developers.mdx -->
 <!-- Review, edit, then post by hand. Mark it posted in calendar.csv. -->
+
 The developer's roadmap to AI: what to learn, and in what order
 
 New to AI? Learn it in six steps, from how a model works to prompts, tools, MCP, agents and RAG, in an order where each step builds on the one before.

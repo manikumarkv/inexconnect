@@ -129,6 +129,7 @@ function header(post, platform, date) {
     `<!-- ${platform} · scheduled ${date} · source: apps/blog/src/content/posts/${post.slug}.mdx -->`,
     `<!-- Review, edit, then post by hand. Mark it posted in calendar.csv. -->`,
     "",
+    "",
   ].join("\n");
 }
 
@@ -154,7 +155,7 @@ function xThread(post, date) {
   ];
   const out = tweets.map((t, i) => {
     const len = xLength(t);
-    const flag = len > 280 ? `  ⚠ ${len}/280 — trim before posting` : `  (${len}/280)`;
+    const flag = len > 280 ? ` ⚠ ${len}/280 — trim before posting` : ` (${len}/280)`;
     return `### Post ${i + 1}${flag}\n\n${t}`;
   });
   return `${header(post, "X thread", date)}${out.join("\n\n")}\n`;

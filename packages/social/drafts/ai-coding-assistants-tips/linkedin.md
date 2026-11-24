@@ -1,5 +1,6 @@
 <!-- LinkedIn · scheduled 2026-12-17 · source: apps/blog/src/content/posts/ai-coding-assistants-tips.mdx -->
 <!-- Review, edit, then post by hand. Mark it posted in calendar.csv. -->
+
 Getting the most out of AI coding assistants
 
 Practical habits for AI coding assistants: give project context, ask for small tasks, make the AI test its work, and review every line it writes.

@@ -1,5 +1,6 @@
 <!-- LinkedIn · scheduled 2026-12-21 · source: apps/blog/src/content/posts/ai-cost-and-latency.mdx -->
 <!-- Review, edit, then post by hand. Mark it posted in calendar.csv. -->
+
 AI cost and latency: what drives them and how to cut them
 
 You pay per token and wait per token. See what an LLM request really costs, what makes it slow, and the levers that cut both without hurting quality.

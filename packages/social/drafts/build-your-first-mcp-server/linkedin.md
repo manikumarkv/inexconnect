@@ -1,5 +1,6 @@
 <!-- LinkedIn · scheduled 2026-12-31 · source: apps/blog/src/content/posts/build-your-first-mcp-server.mdx -->
 <!-- Review, edit, then post by hand. Mark it posted in calendar.csv. -->
+
 How to build your first MCP server in TypeScript
 
 Build a small MCP server with two tools in TypeScript, test it with the MCP Inspector, and connect it to Claude Code with one command.

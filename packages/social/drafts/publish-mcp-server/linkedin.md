@@ -1,5 +1,6 @@
 <!-- LinkedIn · scheduled 2027-01-18 · source: apps/blog/src/content/posts/publish-mcp-server.mdx -->
 <!-- Review, edit, then post by hand. Mark it posted in calendar.csv. -->
+
 How to publish your MCP server and use it in AI tools
 
 Package a TypeScript MCP server for npm, list it in the official MCP Registry, and add it to Claude Code, Claude Desktop, VS Code and Cursor.

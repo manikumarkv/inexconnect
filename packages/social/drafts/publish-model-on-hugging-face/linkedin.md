@@ -1,5 +1,6 @@
 <!-- LinkedIn · scheduled 2027-01-21 · source: apps/blog/src/content/posts/publish-model-on-hugging-face.mdx -->
 <!-- Review, edit, then post by hand. Mark it posted in calendar.csv. -->
+
 How to publish your fine-tuned model on Hugging Face
 
 Upload a fine-tuned model to the Hugging Face Hub: create a safe access token, write a model card, push the adapter, and load it by name from Python.

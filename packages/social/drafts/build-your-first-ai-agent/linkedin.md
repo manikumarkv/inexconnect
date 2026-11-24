@@ -1,5 +1,6 @@
 <!-- LinkedIn · scheduled 2026-12-28 · source: apps/blog/src/content/posts/build-your-first-ai-agent.mdx -->
 <!-- Review, edit, then post by hand. Mark it posted in calendar.csv. -->
+
 How to build your first AI agent in Node.js
 
 Build a small AI agent with the Anthropic TypeScript SDK: a tool loop, three read-only file tools and a step limit. Run it without an API key first.

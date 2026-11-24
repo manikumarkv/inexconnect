@@ -1,5 +1,6 @@
 <!-- LinkedIn · scheduled 2027-01-07 · source: apps/blog/src/content/posts/fine-tune-your-first-model.mdx -->
 <!-- Review, edit, then post by hand. Mark it posted in calendar.csv. -->
+
 How to fine-tune your first model
 
 Fine-tune a small open model with LoRA on your laptop: write a tiny dataset, train with Hugging Face TRL, and compare answers before and after.

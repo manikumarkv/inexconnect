@@ -1,5 +1,6 @@
 <!-- LinkedIn · scheduled 2026-12-14 · source: apps/blog/src/content/posts/ai-agents-vs-mcp.mdx -->
 <!-- Review, edit, then post by hand. Mark it posted in calendar.csv. -->
+
 AI agents vs MCP: what's the difference and how they fit together
 
 MCP and AI agents are not alternatives. MCP connects tools to AI apps; an agent runs a model in a loop that uses them. See how they fit together.

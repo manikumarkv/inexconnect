@@ -1,5 +1,6 @@
 <!-- LinkedIn · scheduled 2026-12-07 · source: apps/blog/src/content/posts/what-is-an-llm.mdx -->
 <!-- Review, edit, then post by hand. Mark it posted in calendar.csv. -->
+
 What is an LLM? Here's the short answer.
 
 An LLM is the engine behind ChatGPT and Claude. Learn how it writes text, what tokens and context windows are, and why it sometimes makes things up.
